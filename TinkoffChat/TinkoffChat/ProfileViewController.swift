@@ -133,13 +133,6 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
         self.present(alertViewController, animated: true, completion: nil)
     }
     
-  @objc func alertControllerBackgroundTapped(_ recognizer: UITapGestureRecognizer)
-    {
-        if(recognizer.state == UIGestureRecognizerState.ended){
-            self.dismiss(animated: true, completion: nil)
-        }
-   
-    }
 
     func imagePickerWith(sourceType: UIImagePickerControllerSourceType) {
         
