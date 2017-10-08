@@ -20,31 +20,12 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        
-        if self.editButtonlabel != nil {
-            if let frame = self.editButtonlabel?.frame {
-                print (frame)
-            }
-        } else {
-            print ("editButtonlabel no exist")
-        }
-
-        /*
-             Проблема возникла в результате того что самой кнопки как объекта еще не существует в момент работы init, соответсвенно
-             нельзя получить frame того чего нет. p.s. что мертво умереть не может )))
-        */
+   
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if self.editButtonlabel != nil {
-            if let frame = self.editButtonlabel?.frame {
-                 print (frame)
-            }
-        } else {
-            print ("editButtonlabel no exist")
-        }
+  
 
     }
     
@@ -52,17 +33,6 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
         
       super.viewWillAppear(animated)
    
-        if self.editButtonlabel != nil {
-            if let frame = self.editButtonlabel?.frame {
-                print (frame)
-            }
-        } else {
-            print ("editButtonlabel no exist")
-        }
-        
-         /*
-             Здесь frame не отличается от того что в viewDidLoad
-         */
         
     }
     
@@ -70,18 +40,6 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
         
         super.viewDidAppear(animated)
         
-        if self.editButtonlabel != nil {
-            if let frame = self.editButtonlabel?.frame {
-                print (frame)
-            }
-        } else {
-            print ("editButtonlabel no exist")
-        }
-        
-        /*
-             После наложения constrait к моменту viewDidAppear происходит изменение frame у editbutton
-             Обращаю внимание что если запустить на iphone 5 или SE, то frame будет одинаковый так как весь перерасчет идет относительно того что находиться в interface builder
-        */
         
     }
     
@@ -105,15 +63,19 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
     
     // MARK - Actions
     
+    @IBAction func cancelButton(_ sender: UIBarButtonItem) {
+        
+        self.dismiss(animated: true, completion: nil)
+        
+    }
+    
     @IBAction func editButtonAction(_ sender: UIButton) {
         
         
     }
     
     @IBAction func selectProfilePhotoAction(_ sender: Any) {
-        
-        print ("Choose image profile")
-        
+   
         let alertViewController = UIAlertController(title: "Change Profile Photo", message: nil, preferredStyle: .actionSheet)
         alertViewController.addAction(UIAlertAction(title: "Choose From Library", style: .`default`, handler:  {[weak self] action in
             
