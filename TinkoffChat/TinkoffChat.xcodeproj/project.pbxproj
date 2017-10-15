@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F50062F11F9240D200996929 /* GCDDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50062F01F9240D200996929 /* GCDDataManager.swift */; };
+		F50062F31F9240DF00996929 /* OperationDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50062F21F9240DF00996929 /* OperationDataManager.swift */; };
+		F52C3E0C1F93904A00C1DF23 /* FileManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52C3E0B1F93904900C1DF23 /* FileManagerProtocol.swift */; };
 		F550A20C1F88166F0077A1E0 /* ConversationsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F550A20B1F88166F0077A1E0 /* ConversationsListViewController.swift */; };
 		F550A20E1F88D7F60077A1E0 /* ConversationsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F550A20D1F88D7F60077A1E0 /* ConversationsTableViewCell.swift */; };
 		F550A2101F88E3B70077A1E0 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F550A20F1F88E3B70077A1E0 /* Message.swift */; };
@@ -21,6 +24,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F50062F01F9240D200996929 /* GCDDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDDataManager.swift; sourceTree = "<group>"; };
+		F50062F21F9240DF00996929 /* OperationDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDataManager.swift; sourceTree = "<group>"; };
+		F52C3E0B1F93904900C1DF23 /* FileManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerProtocol.swift; sourceTree = "<group>"; };
 		F550A20B1F88166F0077A1E0 /* ConversationsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewController.swift; sourceTree = "<group>"; };
 		F550A20D1F88D7F60077A1E0 /* ConversationsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsTableViewCell.swift; sourceTree = "<group>"; };
 		F550A20F1F88E3B70077A1E0 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
@@ -47,10 +53,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F50062E41F922B0900996929 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F5D331921F72C978004BE0DE /* AppDelegate.swift */,
+				F5D331A71F72D1A6004BE0DE /* Media.xcassets */,
+				F5D3319C1F72C978004BE0DE /* Assets.xcassets */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F50062E51F922B3600996929 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				F5D331961F72C978004BE0DE /* Profile.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
 		F54440F81F8A1FC500819264 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				F550A20F1F88E3B70077A1E0 /* Message.swift */,
+				F52C3E0B1F93904900C1DF23 /* FileManagerProtocol.swift */,
+				F50062F01F9240D200996929 /* GCDDataManager.swift */,
+				F50062F21F9240DF00996929 /* OperationDataManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -94,14 +121,12 @@
 		F5D331911F72C978004BE0DE /* TinkoffChat */ = {
 			isa = PBXGroup;
 			children = (
-				F54440F81F8A1FC500819264 /* Model */,
-				F56364621F89694500DC57BD /* Controllers */,
-				F5D331961F72C978004BE0DE /* Profile.storyboard */,
-				F5D331A71F72D1A6004BE0DE /* Media.xcassets */,
-				F5D3319C1F72C978004BE0DE /* Assets.xcassets */,
 				F5D3319E1F72C978004BE0DE /* LaunchScreen.storyboard */,
 				F5D331A11F72C978004BE0DE /* Info.plist */,
-				F5D331921F72C978004BE0DE /* AppDelegate.swift */,
+				F50062E51F922B3600996929 /* Storyboards */,
+				F50062E41F922B0900996929 /* Supporting Files */,
+				F54440F81F8A1FC500819264 /* Model */,
+				F56364621F89694500DC57BD /* Controllers */,
 			);
 			path = TinkoffChat;
 			sourceTree = "<group>";
@@ -182,12 +207,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				F550A20E1F88D7F60077A1E0 /* ConversationsTableViewCell.swift in Sources */,
+				F52C3E0C1F93904A00C1DF23 /* FileManagerProtocol.swift in Sources */,
 				F5D331951F72C978004BE0DE /* ProfileViewController.swift in Sources */,
+				F50062F11F9240D200996929 /* GCDDataManager.swift in Sources */,
 				F563645E1F89585B00DC57BD /* ConversationViewController.swift in Sources */,
 				F550A2101F88E3B70077A1E0 /* Message.swift in Sources */,
 				F56364601F89692700DC57BD /* ChatTableViewCell.swift in Sources */,
 				F5D331931F72C978004BE0DE /* AppDelegate.swift in Sources */,
 				F550A20C1F88166F0077A1E0 /* ConversationsListViewController.swift in Sources */,
+				F50062F31F9240DF00996929 /* OperationDataManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
