@@ -246,6 +246,14 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
         return true
     }
 
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        
+        if textField.isFirstResponder {
+            self.selectProfilePhotoButtonLabel.isEnabled = false
+        }
+        
+    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
             if textField == self.userNameTextField {
                 let text = self.dictionaryOfUserSettings["userName"] as? String ?? ""
@@ -260,6 +268,7 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
                     self.dictionaryOfUserSettings["infoText"] = textField.text
             }
         }
+        self.selectProfilePhotoButtonLabel.isEnabled = true
     }
     
     
