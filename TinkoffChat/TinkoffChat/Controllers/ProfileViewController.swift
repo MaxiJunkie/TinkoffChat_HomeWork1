@@ -268,13 +268,13 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
     }
 
     @objc func keyboardWillShow(notification:NSNotification) {
-        if self.view.bounds.origin.y == 0 {
+        if self.view.bounds.origin.y == 0   {
           adjustingHeight(show: true, notification: notification)
         }
     }
     
     @objc func keyboardWillHide(notification:NSNotification) {
-         if self.view.bounds.origin.y > 0 {
+         if self.view.bounds.origin.y > 0   {
          adjustingHeight(show: false, notification: notification)
         }
     }
@@ -284,7 +284,7 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
         var userInfo = notification.userInfo!
         let keyboardFrame:CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let animationDurarion = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! TimeInterval
-        let changeInHeight = (keyboardFrame.height - self.operationButtonLabel.bounds.height - 20) * (show ? 1 : -1)
+        let changeInHeight = (keyboardFrame.height - self.operationButtonLabel.bounds.height * 3 ) * (show ? 1 : -1)
         let view = self.view.bounds.origin.y
         UIView.animate(withDuration: animationDurarion, animations: { () -> Void in
             self.view.bounds.origin.y = view + changeInHeight
