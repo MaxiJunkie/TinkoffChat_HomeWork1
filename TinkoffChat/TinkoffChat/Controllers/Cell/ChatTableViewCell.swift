@@ -17,7 +17,9 @@ class ChatTableViewCell:  UITableViewCell, MessageCellConfiguration    {
 
     @IBOutlet weak var outboundLabel: UILabel!
     @IBOutlet weak var incomingLabel: UILabel!
-   
+    @IBOutlet weak var outboandView: UIView!
+    @IBOutlet weak var incomingView: UIView!
+    
     var textOfMessage: String? {
         get {
             if self.reuseIdentifier == "outboundCell" {
@@ -29,9 +31,13 @@ class ChatTableViewCell:  UITableViewCell, MessageCellConfiguration    {
         }
         set {
             if self.reuseIdentifier == "outboundCell" {
+                outboandView.layer.masksToBounds = true
+                outboandView.layer.cornerRadius = 2
                 outboundLabel.text = newValue
             }
             else {
+                incomingView.layer.masksToBounds = true
+                incomingView.layer.cornerRadius = 2
                 incomingLabel.text = newValue
             }
         }

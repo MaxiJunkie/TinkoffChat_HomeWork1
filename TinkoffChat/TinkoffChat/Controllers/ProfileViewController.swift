@@ -31,6 +31,11 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
+        self.activityIndicator.hidesWhenStopped = true
+        
+        self.placeholderPhotoProfile.layer.masksToBounds = true
+        self.selectProfilePhotoButtonLabel.layer.masksToBounds = true
+        
         GCDDataManager.sharedInstance.readDataFromFile(completion: {[weak self]  dictionary in
           self?.dictionaryOfUserSettings = dictionary
            
@@ -64,13 +69,10 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.activityIndicator.hidesWhenStopped = true
         self.gcdButtonLabel.layer.borderWidth = 1.5
         self.gcdButtonLabel.layer.cornerRadius = self.gcdButtonLabel.bounds.height/4
         self.operationButtonLabel.layer.borderWidth = 1.5
         self.operationButtonLabel.layer.cornerRadius = self.gcdButtonLabel.bounds.height/4
-        self.placeholderPhotoProfile.layer.masksToBounds = true
-        self.selectProfilePhotoButtonLabel.layer.masksToBounds = true
         self.selectProfilePhotoButtonLabel.layer.cornerRadius = self.selectProfilePhotoButtonLabel.bounds.height/2
         self.placeholderPhotoProfile.layer.cornerRadius = self.selectProfilePhotoButtonLabel.layer.cornerRadius
         self.selectProfilePhotoButtonLabel.layer.cornerRadius = self.selectProfilePhotoButtonLabel.bounds.height/2
