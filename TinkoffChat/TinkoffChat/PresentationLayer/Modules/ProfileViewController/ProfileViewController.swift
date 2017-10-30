@@ -11,19 +11,27 @@ import UIKit
 
 class ProfileViewController: UIViewController , UIImagePickerControllerDelegate , UINavigationControllerDelegate, UITextFieldDelegate {
 
-    static var settingIsChange = false
+    var settingIsChange = false
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
    
     @IBOutlet weak var infoTextField: UITextField!
     @IBOutlet weak var userNameTextField: UITextField!
 
-    @IBOutlet weak var gcdButtonLabel: UIButton!
-    @IBOutlet weak var operationButtonLabel: UIButton!
-    @IBOutlet weak var selectProfilePhotoButtonLabel: UIButton!
+    @IBOutlet weak var gcdButton: UIButton!
+    @IBOutlet weak var operationButton: UIButton!
+    @IBOutlet weak var selectProfilePhotoButton: UIButton!
     @IBOutlet weak var placeholderPhotoProfile: UIImageView!
     
     var dictionaryOfUserSettings = [String: Any]()
+    var profileModel: ProfileModelProtocol!
+    
+    static func initProfileVC(with model: ProfileModelProtocol) -> ProfileViewController {
+        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "ProfileVC") as! ProfileViewController
+        profileVC.profileModel = model
+        return profileVC
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,54 +40,52 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         self.activityIndicator.hidesWhenStopped = true
-        
         self.placeholderPhotoProfile.layer.masksToBounds = true
-        self.selectProfilePhotoButtonLabel.layer.masksToBounds = true
-        
-        GCDDataManager.sharedInstance.readDataFromFile(completion: {[weak self]  dictionary in
-          self?.dictionaryOfUserSettings = dictionary
+        self.selectProfilePhotoButton.layer.masksToBounds = true
+    
+        profileModel.readDataFromFile(using: .globalCentralDispatch, completion: {[weak self] dictionary in
            
+            self?.dictionaryOfUserSettings = dictionary
+            
             var totalData :Data?
             if let imageData = self?.dictionaryOfUserSettings["imageProfile"] as? String {
                 if  let data =  Data(base64Encoded: imageData , options: NSData.Base64DecodingOptions()) {
                     totalData = data
                 }
             }
-            
             DispatchQueue.main.async {
-                
                 if let userName = self?.dictionaryOfUserSettings["userName"] as? String {
                     self?.userNameTextField?.text = userName
                 }
                 if let infoText = self?.dictionaryOfUserSettings["infoText"] as? String {
-                      self?.infoTextField?.text = infoText
+                    self?.infoTextField?.text = infoText
                 }
-                
-               
                 if totalData != nil {
                     self?.placeholderPhotoProfile.contentMode = .scaleAspectFill
                     self?.placeholderPhotoProfile?.image = UIImage(data: totalData!)
                 }
-                
             }
-            
         }, errorBlock: nil)
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.gcdButton.layer.borderWidth = 1.5
+        self.operationButton.layer.borderWidth = 1.5
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.gcdButtonLabel.layer.borderWidth = 1.5
-        self.gcdButtonLabel.layer.cornerRadius = self.gcdButtonLabel.bounds.height/4
-        self.operationButtonLabel.layer.borderWidth = 1.5
-        self.operationButtonLabel.layer.cornerRadius = self.gcdButtonLabel.bounds.height/4
-        self.selectProfilePhotoButtonLabel.layer.cornerRadius = self.selectProfilePhotoButtonLabel.bounds.height/2
-        self.placeholderPhotoProfile.layer.cornerRadius = self.selectProfilePhotoButtonLabel.layer.cornerRadius
-        self.selectProfilePhotoButtonLabel.layer.cornerRadius = self.selectProfilePhotoButtonLabel.bounds.height/2
-        self.placeholderPhotoProfile.layer.cornerRadius = self.selectProfilePhotoButtonLabel.layer.cornerRadius
-       
-        let offsetOfButton = self.selectProfilePhotoButtonLabel.bounds.height/5
-        self.selectProfilePhotoButtonLabel.imageEdgeInsets = UIEdgeInsetsMake(offsetOfButton, offsetOfButton, offsetOfButton, offsetOfButton)
+      
+        self.gcdButton.layer.cornerRadius = self.gcdButton.bounds.height/4
+        self.operationButton.layer.cornerRadius = self.gcdButton.bounds.height/4
+        self.selectProfilePhotoButton.layer.cornerRadius = self.selectProfilePhotoButton.bounds.height/2
+        self.placeholderPhotoProfile.layer.cornerRadius = self.selectProfilePhotoButton.layer.cornerRadius
+        self.selectProfilePhotoButton.layer.cornerRadius = self.selectProfilePhotoButton.bounds.height/2
+        self.placeholderPhotoProfile.layer.cornerRadius = self.selectProfilePhotoButton.layer.cornerRadius
+        let offsetOfButton = self.selectProfilePhotoButton.bounds.height/5
+        self.selectProfilePhotoButton.imageEdgeInsets = UIEdgeInsetsMake(offsetOfButton, offsetOfButton, offsetOfButton, offsetOfButton)
+        
         
     }
     
@@ -99,36 +105,20 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
  
     @IBAction func gcdButtonAction(_ sender: Any) {
         
-        if ProfileViewController.settingIsChange {
-            ProfileViewController.settingIsChange = false
+        if settingIsChange {
+            settingIsChange = false
             self.activityIndicator.startAnimating()
-            self.gcdButtonLabel.isEnabled = false
-            self.operationButtonLabel.isEnabled = false
-            GCDDataManager.sharedInstance.writeDataInFile(self.dictionaryOfUserSettings, completion: {
+            self.gcdButton.isEnabled = false
+            self.operationButton.isEnabled = false
+
+            profileModel.writeDataInFile(using: .globalCentralDispatch, self.dictionaryOfUserSettings , completion: {
                 [weak self] in
                 DispatchQueue.main.async {
-                
-                    self?.activityIndicator.stopAnimating()
-                    self?.gcdButtonLabel.isEnabled = true
-                    self?.operationButtonLabel.isEnabled = true
-                    let alert = UIAlertController(title: "Data saved", message: nil, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: nil))
-                    self?.present(alert, animated: true, completion: nil)
-                }}, errorBlock: {[weak self]  error in
-                    DispatchQueue.main.async {
-                        let alert = UIAlertController(title: "Error", message: "data could not be saved", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: {
-                            _ in
-                            self?.activityIndicator.stopAnimating()
-                            self?.gcdButtonLabel.isEnabled = true
-                            self?.operationButtonLabel.isEnabled = true
-                        }))
-                        alert.addAction(UIAlertAction(title: NSLocalizedString("Repeat", comment: "Default action"), style: .`default`, handler: {
-                            _ in
-                            ProfileViewController.settingIsChange = true
-                            self?.gcdButtonAction(sender)
-                        }))
-                        self?.present(alert, animated: true, completion: nil)
+                    self?.configurateAlert()
+                }
+            }, errorBlock: { [weak self]  error in
+                DispatchQueue.main.async {
+                        self?.configurateErrorAlert(with: .globalCentralDispatch, sender: sender)
                     }
                 })
             }
@@ -136,48 +126,56 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
     
     @IBAction func operationButtonAction(_ sender: UIButton) {
        
-        if ProfileViewController.settingIsChange {
-            ProfileViewController.settingIsChange = false
+        if settingIsChange {
+            settingIsChange = false
             self.activityIndicator.startAnimating()
-            self.gcdButtonLabel.isEnabled = false
-            self.operationButtonLabel.isEnabled = false
-            let queue = OperationQueue()
-            queue.maxConcurrentOperationCount = 1
-            let operation = OperationDataManager()
-            operation.operationDictionary = dictionaryOfUserSettings
-            queue.addOperation(operation)
-            operation.completionBlock = { [weak self] in
-                
-               let mainQueue = OperationQueue.main
-                if operation.errorBlock != nil {
-                     mainQueue.addOperation({
-                        let alert = UIAlertController(title: "Error", message: "data could not be saved", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: {
-                            _ in
-                            self?.activityIndicator.stopAnimating()
-                            self?.gcdButtonLabel.isEnabled = true
-                            self?.operationButtonLabel.isEnabled = true
-                        }))
-                        alert.addAction(UIAlertAction(title: NSLocalizedString("Repeat", comment: "Default action"), style: .`default`, handler: {
-                            _ in
-                            ProfileViewController.settingIsChange = true
-                            self?.operationButtonAction(sender)
-                        }))
-                        self?.present(alert, animated: true, completion: nil)
-                     })
-                } else {
-                    mainQueue.addOperation({
-                        self?.activityIndicator.stopAnimating()
-                        self?.gcdButtonLabel.isEnabled = true
-                        self?.operationButtonLabel.isEnabled = true
-                        let alert = UIAlertController(title: "Data saved", message: nil, preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: nil))
-                        self?.present(alert, animated: true, completion: nil)
-                    })
+            self.gcdButton.isEnabled = false
+            self.operationButton.isEnabled = false
+            
+            profileModel.writeDataInFile(using: .operation, dictionaryOfUserSettings, completion: { [weak self] in
+                OperationQueue.main.addOperation {
+                    self?.configurateAlert()
                 }
-            }
+            }, errorBlock: {[weak self]  (error) in
+                OperationQueue.main.addOperation {
+                    self?.configurateErrorAlert(with: .operation, sender: sender)
+                }
+            })
         }
     }
+    
+    // MARK - methods for configurate alerts
+    
+    func configurateAlert() {
+        self.activityIndicator.stopAnimating()
+        self.gcdButton.isEnabled = true
+        self.operationButton.isEnabled = true
+        let alert = UIAlertController(title: "Data saved", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func configurateErrorAlert(with type: TypeOfSaving, sender: Any) {
+        
+        let alert = UIAlertController(title: "Error", message: "data could not be saved", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`, handler: {
+            _ in
+            self.activityIndicator.stopAnimating()
+            self.gcdButton.isEnabled = true
+            self.operationButton.isEnabled = true
+        }))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Repeat", comment: "Default action"), style: .`default`, handler: {
+            _ in
+            self.settingIsChange = true
+            if type == .globalCentralDispatch {
+                self.gcdButtonAction(sender)
+            } else {
+                self.operationButtonAction(sender as! UIButton)
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     
     
     @IBAction func selectProfilePhotoAction(_ sender: Any) {
@@ -195,20 +193,20 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
         }))
         alertViewController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {
             (alertAction: UIAlertAction!) in
-            alertViewController.dismiss(animated: true, completion: nil)
         }))
-        
         self.present(alertViewController, animated: true, completion: nil)
     }
     
 
     func imagePickerWith(sourceType: UIImagePickerControllerSourceType) {
         
+        weak var weakSelf = self
+        
         let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
+        imagePicker.delegate = weakSelf
         imagePicker.allowsEditing = false
         imagePicker.sourceType = sourceType
-        self.present(imagePicker, animated: true, completion: nil)
+        weakSelf?.present(imagePicker, animated: true, completion: nil)
     }
     
     
@@ -230,7 +228,7 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
     func updateDataImage() {
         if let image = self.placeholderPhotoProfile?.image {
             if let data = UIImagePNGRepresentation(image)?.base64EncodedData() {
-                ProfileViewController.settingIsChange = true
+                settingIsChange = true
                 self.dictionaryOfUserSettings["imageProfile"] =  String(data: data, encoding: .utf8)
             }
         }
@@ -251,7 +249,7 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
         if textField.isFirstResponder {
-            self.selectProfilePhotoButtonLabel.isEnabled = false
+            self.selectProfilePhotoButton.isEnabled = false
         }
         
     }
@@ -260,17 +258,17 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
             if textField == self.userNameTextField {
                 let text = self.dictionaryOfUserSettings["userName"] as? String ?? ""
                 if text != textField.text {
-                    ProfileViewController.settingIsChange = true
+                    settingIsChange = true
                     self.dictionaryOfUserSettings["userName"] = textField.text
                 }
             }else {
                 let text = self.dictionaryOfUserSettings["infoText"] as? String ?? ""
                 if text != textField.text {
-                    ProfileViewController.settingIsChange = true
+                    settingIsChange = true
                     self.dictionaryOfUserSettings["infoText"] = textField.text
             }
         }
-        self.selectProfilePhotoButtonLabel.isEnabled = true
+        self.selectProfilePhotoButton.isEnabled = true
     }
     
     
@@ -295,7 +293,7 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
         var userInfo = notification.userInfo!
         let keyboardFrame:CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let animationDurarion = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! TimeInterval
-        let changeInHeight = (keyboardFrame.height - self.operationButtonLabel.bounds.height * 3 ) * (show ? 1 : -1)
+        let changeInHeight = (keyboardFrame.height - self.operationButton.bounds.height * 3 ) * (show ? 1 : -1)
         let view = self.view.bounds.origin.y
         UIView.animate(withDuration: animationDurarion, animations: { () -> Void in
             self.view.bounds.origin.y = view + changeInHeight

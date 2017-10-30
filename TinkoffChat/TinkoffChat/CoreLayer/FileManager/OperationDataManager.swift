@@ -8,7 +8,8 @@
 
 import Foundation
 
-class OperationDataManager : Operation ,FileManagerProtocol {
+
+class OperationDataManager : Operation , ReadDataProtocol, WriteDataProtocol {
  
     override var isAsynchronous: Bool { return true }
     override var isExecuting: Bool { return state == .executing }
@@ -51,8 +52,7 @@ class OperationDataManager : Operation ,FileManagerProtocol {
         } else {
             state = .executing
             
-            self.writeDataInFile(self.operationDictionary, completion: nil, errorBlock: nil)
-            
+            writeDataInFile(self.operationDictionary, completion: nil, errorBlock: nil)
             if self.isCancelled {
                 
                 state = .finished
@@ -67,24 +67,20 @@ class OperationDataManager : Operation ,FileManagerProtocol {
     
     private let documentsDirectoryPath = NSURL(string: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!)!
     
-    //MARK - FileManagerProtocol
+    //MARK - OperationDataManagerProtocol
     
     internal func createdFile(_ url: URL?) -> Bool {
         if let jsonFilePath = url {
             let fileManager = FileManager.default
             var isDirectory: ObjCBool = false
-            // creating a .json file in the Documents folder
             if !fileManager.fileExists(atPath: jsonFilePath.absoluteString, isDirectory: &isDirectory) {
                 let created = fileManager.createFile(atPath: jsonFilePath.absoluteString, contents: nil, attributes: nil)
                 if created {
-                    //    print("File created ")
                     return true
                 } else {
-                    //     print("Couldn't create file for some reason")
                     return false
                 }
             } else {
-                //   print("File already exists")
                 return true
             }
         }
@@ -92,20 +88,21 @@ class OperationDataManager : Operation ,FileManagerProtocol {
     }
     
     internal func readDataFromFile(completion: @escaping (([String: Any]) -> ()), errorBlock: ((NSError) -> ())?) {
-  
-            if let jsonFilePath = self.documentsDirectoryPath.appendingPathComponent("test.json") {
+        
+         weak var weakSelf = self
+        
+            if let jsonFilePath = weakSelf?.documentsDirectoryPath.appendingPathComponent("test.json") {
                 if self.createdFile(jsonFilePath) {
                     do {
                         let file = try FileHandle(forReadingFrom: jsonFilePath)
                         let data = file.readDataToEndOfFile()
                         let json = try? JSONSerialization.jsonObject(with: data, options: [])
                         if let object = json as? [String: Any] {
-                            self.completion!(object)
+                            weakSelf?.completion!(object)
                         }
-                        // print("JSON data was readed file successfully!")
                     } catch let error as NSError {
                         print("Couldn't read from file: \(error.localizedDescription)")
-                            self.errorBlock!()
+                            weakSelf?.errorBlock!()
                 }
             }
         }
@@ -113,10 +110,11 @@ class OperationDataManager : Operation ,FileManagerProtocol {
     
     internal func writeDataInFile(_ dictionary : [String: Any], completion: (() -> ())?, errorBlock: ((NSError) -> ())?) {
 
-            if let jsonFilePath = self.documentsDirectoryPath.appendingPathComponent("test.json") {
+        weak var weakSelf = self
+        
+            if let jsonFilePath = weakSelf?.documentsDirectoryPath.appendingPathComponent("test.json") {
                 if self.createdFile(jsonFilePath) {
                     let dict = dictionary
-                    // creating JSON
                     var jsonData: NSData!
                     do {
                         jsonData = try JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions()) as NSData
@@ -124,23 +122,16 @@ class OperationDataManager : Operation ,FileManagerProtocol {
                     } catch let error as NSError {
                         print("Array to JSON conversion failed: \(error.localizedDescription)")
                     }
-                    
-                    // Write that JSON to the file created earlier
-                    
+                 
                     do {
                         let file = try FileHandle(forWritingTo: jsonFilePath)
                         file.truncateFile(atOffset: 0)
                         file.write(jsonData as Data)
                         file.closeFile()
-                        //!!!!!!!!!!!!!!!!!!!!!!!!!!!! ATENTION
-                        
-                        // если хотите увидеть алерт с ошибкой сохранения нужно раскоментировать этот код
-                        
-                         //self.errorBlock = {}
-                     
+                 
                     } catch let error as NSError {
                         print("Couldn't write to file: \(error.localizedDescription)")
-                        self.errorBlock!()
+                        weakSelf?.errorBlock!()
                     }
                 }
             }

@@ -9,47 +9,48 @@
 import UIKit
 import MultipeerConnectivity
 
-class ConversationsListViewController: UIViewController , UITableViewDelegate , UITableViewDataSource {
+class ConversationsListViewController: UIViewController , UITableViewDelegate , UITableViewDataSource  {
 
     @IBOutlet weak var ConversationListTableView: UITableView!
     
-    var communicationManager = CommunicationManager()
+    var model : CommunicationListModelProtocol!
     
     var messages = ["online": [Message](), "history": [Message]()]
     
-  
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    required init?(coder aDecoder: NSCoder ) {
         
-        communicationManager.delegateOfConversations = self
-
-       
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.ConversationListTableView.reloadData()
+        super.init(coder: aDecoder)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    static func initConversationsList(with model: CommunicationListModelProtocol) -> ConversationsListViewController {
+        let conversationsListVC = UIStoryboard(name: "ConversationsList", bundle: nil).instantiateViewController(withIdentifier: "ConversationsListVC") as! ConversationsListViewController
+        conversationsListVC.model = model
+        return conversationsListVC
+        
+    }
+ 
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        model.fetchNewPeers()
+    }
     
-        if segue.identifier == "showChat" {
-            if let destination = segue.destination as? ConversationViewController {
-             if  let messageCell = sender as? ConversationsTableViewCell {
-                if let text = messageCell.nameOfUserLabel?.text {
-                        destination.title = text
-                        destination.communicationManager = communicationManager
-                    }
-                }
-            }
-        }
+    @IBAction func profileButtonAction(_ sender: UIBarButtonItem) {
+        
+        let profileVC = ProfileAssembly().profileViewController()
+        self.present(profileVC, animated: true, completion: nil)
+        
     }
     
     // MARK - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
+  
+        let conversationVC = ConversationAssembly().conversationViewController()
+        conversationVC.title = messages["online"]![indexPath.row].name
+        conversationVC.userID = messages["online"]![indexPath.row].userID
+        self.navigationController?.pushViewController(conversationVC, animated: true)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -104,9 +105,12 @@ class ConversationsListViewController: UIViewController , UITableViewDelegate , 
 
 }
 
+ // MARK: - CommunicationManagerDelegate
+
 extension ConversationsListViewController: CommunicationManagerDelegate {
-    func reloadData() {
-        self.messages["online"] = communicationManager.onlinePeers
+    
+    func reloadData(with messages: [Message]) {
+        self.messages["online"] = messages
         DispatchQueue.main.async {
             self.ConversationListTableView.reloadData()
         }

@@ -11,7 +11,7 @@ import MultipeerConnectivity
 
 
 protocol CommunicatorDelegate : class {
-    
+ 
     //discovering
     func didFoundUser(userID: String, userName: String)
     func didLostUser(userID: String)
@@ -47,7 +47,6 @@ class MultipeerCommunicator: NSObject, Communicator {
     var online: Bool = true
     
     override init() {
-     
         self.serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: discoveryInfo, serviceType: serviceType)
         self.serviceBrowser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: serviceType)
         super.init()
@@ -71,7 +70,6 @@ class MultipeerCommunicator: NSObject, Communicator {
             let session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .none)
             sessions[userID] = session
             session.delegate = self
-            
             return session
         }
     }
@@ -80,7 +78,7 @@ class MultipeerCommunicator: NSObject, Communicator {
     // MARK - Communicator
     
     func sendMessage(string: String, toUserID: String, completionHandler: ((Bool, Error?) -> ())?) {
-  
+    
         if let session = sessions[toUserID] {
             if let message = createMessage(withText: string) {
                 for peer in session.connectedPeers {
@@ -125,14 +123,13 @@ class MultipeerCommunicator: NSObject, Communicator {
 extension MultipeerCommunicator: MCNearbyServiceBrowserDelegate {
   
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-     
-        let session = createSession(forUser: peerID.displayName)
-        if !session.connectedPeers.contains(peerID) {
-            let userName = info?["userName"] ?? "unknown User"
-            browser.invitePeer(peerID, to: session, withContext: nil, timeout: 30)
-            delegate?.didFoundUser(userID: peerID.displayName, userName: userName)
-        }
         
+        let session = createSession(forUser: peerID.displayName)
+            if !session.connectedPeers.contains(peerID) {
+                let userName = info?["userName"] ?? "unknown User"
+                browser.invitePeer(peerID, to: session, withContext: nil, timeout: 30)
+                delegate?.didFoundUser(userID: peerID.displayName, userName: userName)
+            }
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
@@ -142,7 +139,8 @@ extension MultipeerCommunicator: MCNearbyServiceBrowserDelegate {
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
-        print("%@", "didNotStartBrowsingForPeers: \(error)")
+       
+        delegate?.failedToStartBrowsingForUsers(error: error)
     }
     
 }
@@ -152,20 +150,19 @@ extension MultipeerCommunicator: MCNearbyServiceBrowserDelegate {
 extension MultipeerCommunicator : MCNearbyServiceAdvertiserDelegate {
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
-        print( "didNotStartAdvertisingPeer: \(error)")
+     
+        delegate?.failedToStartAdvertising(error: error)
     }
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        print("didReceiveInvitationFromPeer \(peerID)")
-        
-        let session = createSession(forUser: peerID.displayName)
-        if !session.connectedPeers.contains(peerID) {
-            invitationHandler(true, session)
-        } else {
-            invitationHandler(false, nil)
+      
+            let session = createSession(forUser: peerID.displayName)
+                if !session.connectedPeers.contains(peerID) {
+                    invitationHandler(true, session)
+                } else {
+                    invitationHandler(false, nil)
+            }
         }
-    }
-    
 }
 
 // MARK - MCSessionDelegate
@@ -173,18 +170,14 @@ extension MultipeerCommunicator : MCNearbyServiceAdvertiserDelegate {
 extension MultipeerCommunicator : MCSessionDelegate {
     
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        
-        print("peer \(peerID) didChangeState: \(state)")
-        
+   
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        
         do {
             guard let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [ String : String ] else {
                 return
             }
-
             if json["eventType"] == "TextMessage" {
                 if let messageText = json["text"] {
                     delegate?.didRecieveMessage(text: messageText, fromUser: peerID.displayName, toUser: UIDevice.current.name)
@@ -196,11 +189,17 @@ extension MultipeerCommunicator : MCSessionDelegate {
         }
     }
     
-    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {}
+    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
+        // no implementation
+    }
     
-    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {}
+    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress){
+        // no implementation
+    }
     
-    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {}
+    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
+         // no implementation
+    }
     
 }
 

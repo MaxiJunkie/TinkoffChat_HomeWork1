@@ -8,30 +8,32 @@
 
 import Foundation
 
-class GCDDataManager :FileManagerProtocol  {
+protocol ReadDataProtocol : class {
+    func readDataFromFile(completion: @escaping (([String: Any]) -> ()), errorBlock: ((NSError) -> ())?)
+}
+
+protocol WriteDataProtocol : class {
+    func writeDataInFile(_ dictionary : [String: Any], completion: (() -> ())?, errorBlock: ((NSError) -> ())?)
+}
+
+class GCDDataManager : ReadDataProtocol, WriteDataProtocol {
     
-    static let  sharedInstance = GCDDataManager()
- 
     let documentsDirectoryPath :NSURL =  NSURL(string: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!)!
     
-    //MARK - FileManagerProtocol
+    //MARK - GCDDataManagerProtocol
     
     internal func createdFile(_ url: URL?) -> Bool {
         if let jsonFilePath = url {
             let fileManager = FileManager.default
             var isDirectory: ObjCBool = false
-            // creating a .json file in the Documents folder
             if !fileManager.fileExists(atPath: jsonFilePath.absoluteString, isDirectory: &isDirectory) {
                 let created = fileManager.createFile(atPath: jsonFilePath.absoluteString, contents: nil, attributes: nil)
                 if created {
-                //    print("File created ")
                     return true
                 } else {
-               //     print("Couldn't create file for some reason")
                     return false
                 }
             } else {
-             //   print("File already exists")
                 return true
             }
         }
@@ -49,7 +51,6 @@ class GCDDataManager :FileManagerProtocol  {
                         if let object = json as? [String: Any] {
                             completion(object)
                         }
-                       // print("JSON data was readed file successfully!")
                     } catch let error as NSError {
                         print("Couldn't read from file: \(error.localizedDescription)")
                         if errorBlock != nil {
@@ -67,7 +68,6 @@ class GCDDataManager :FileManagerProtocol  {
             if let jsonFilePath = self?.documentsDirectoryPath.appendingPathComponent("test.json") {
                 if (self?.createdFile(jsonFilePath))! {
                     let dict = dictionary
-                        // creating JSON
                         var jsonData: NSData!
                         do {
                             jsonData = try JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions()) as NSData
@@ -76,23 +76,12 @@ class GCDDataManager :FileManagerProtocol  {
                             print("Array to JSON conversion failed: \(error.localizedDescription)")
                         }
                 
-                    // Write that JSON to the file created earlier
-                
                         do {
                             let file = try FileHandle(forWritingTo: jsonFilePath)
                             file.truncateFile(atOffset: 0)
                             file.write(jsonData as Data)
                             file.closeFile()
-                        //!!!!!!!!!!!!!!!!!!!!!!!!!!!! ATENTION
-                    
-                        // если хотите увидеть алерт с ошибкой сохранения нужно раскоментировать этот код
-                   
-                        /*
-                         if errorBlock != nil {
-                             errorBlock!(NSError())
-                         } else
-                         */
-        
+             
                         if completion != nil {
                             completion!()
                         }

@@ -11,14 +11,14 @@ import UIKit
 
 public struct Message  {
     
-    var name :String?
-    var message :String?
+    var name :String
+    var messages :[String]?
     var date : Date?
     var online : Bool
     var hasUnreadMessages: Bool
     let imageOfUser: UIImage
     var userID:  String?
-  
+    var lastMessage :String?
 }
 
 

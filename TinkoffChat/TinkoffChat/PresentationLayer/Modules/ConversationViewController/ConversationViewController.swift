@@ -16,9 +16,17 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
     
     var messagesArray: [Dictionary<String, String>] = []
     
-    var communicationManager = CommunicationManager()
+    var conversationModel: ConversationModelProtocol!
 
     var userID : String?
+    
+    
+    static func initConversationVC(with model: ConversationModelProtocol) -> ConversationViewController {
+        let conversationVC = UIStoryboard(name: "Conversation", bundle: nil).instantiateViewController(withIdentifier: "ConversationVC") as! ConversationViewController
+        conversationVC.conversationModel = model
+        return conversationVC
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,21 +39,12 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
         self.chatDialogTableView.estimatedRowHeight = 140
         self.chatDialogTableView.rowHeight = UITableViewAutomaticDimension
       
-        communicationManager.delegateOfConversation = self
-
         self.chatDialogTableView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
-        
-        
-        for user in communicationManager.onlinePeers {
-            
-            if user.name == self.title {
-                self.userID = user.userID
-            }
-        }
+        conversationModel.fetchNewMessages()
  
     }
 
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: self.view.window)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: self.view.window)
@@ -102,18 +101,19 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-
+        
         textField.resignFirstResponder()
-  
         if let text = textField.text {
-            
-            communicationManager.sendMessage(text: text, toUserID: self.userID!) {[weak self] (success, error) in
+            if let userID = self.userID {
+            conversationModel.sendMessage(text: text, toUserID: userID) {(success, error) in
                 if success {
-                    
-                    let dictionary: [String: String] = ["sender": "self", "message": textField.text!]
-                    self?.messagesArray.append(dictionary)
-                    self?.updateTableview()
-                    textField.text = ""
+                        let messageDictionary: [String: String] = ["sender": "self", "message": text]
+                        self.messagesArray.append(messageDictionary)
+                        DispatchQueue.main.async { [weak self] in
+                            self?.updateTableview()
+                            textField.text = ""
+                        }
+                    }
                 }
             }
         }
@@ -177,13 +177,19 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
 }
 
 extension ConversationViewController: CommunicationManagerDelegate {
-  
-    func reloadData() {
-        if communicationManager.text != "" {
-        let messageDictionary: [String: String] = ["sender": "not", "message": communicationManager.text]
-        messagesArray.append(messageDictionary)
-        DispatchQueue.main.async { [weak self] in
-            self?.updateTableview()
+   
+    func reloadData(with messages: [Message]) {
+      
+        for user in messages {
+            if user.userID == self.userID {
+                if let lastMessage =  user.messages?.last {
+                    let messageDictionary: [String: String] = ["sender": "not", "message": lastMessage]
+                    messagesArray.append(messageDictionary)
+                    DispatchQueue.main.async { [weak self] in
+                        self?.updateTableview()
+                    }
+                    break
+                }
             }
         }
     }

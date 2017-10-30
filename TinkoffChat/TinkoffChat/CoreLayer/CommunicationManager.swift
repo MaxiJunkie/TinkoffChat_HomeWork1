@@ -8,17 +8,24 @@
 
 import UIKit
 
-class CommunicationManager: CommunicatorDelegate {
+
+protocol CommunicationManagerProtocol: class {
     
-    var onlinePeers = [Message]()
-    var currentPeer: Message?
+    var onDataUpdate: ((_ data: [Message]) -> Void)? {get set}
+    var messageUpdate: ((_ data: [Message]) -> Void)? {get set}
+    func sendMessage(text: String, toUserID: String, completion: ((Bool,Error?) -> ())?)
     
-    var text : String = ""
+}
+
+class CommunicationManager:  CommunicatorDelegate , CommunicationManagerProtocol {
+    
+    var onlinePeers = [Message]() 
     
     private var communicator = MultipeerCommunicator()
-    
-    weak var delegateOfConversations: CommunicationManagerDelegate?
     weak var delegateOfConversation: CommunicationManagerDelegate?
+    
+    var onDataUpdate: ((_ data: [Message]) -> Void)?
+    var messageUpdate: ((_ data: [Message]) -> Void)? 
     
     init() {
         communicator.delegate = self
@@ -31,31 +38,21 @@ class CommunicationManager: CommunicatorDelegate {
                 return
             }
         }
-        
         let message = Message.init(name: userName,
-                                   message: nil,
+                                   messages: [],
                                    date: nil,
                                    online: true,
                                    hasUnreadMessages: false,
-                                   imageOfUser:  UIImage(named: "mask1.png")! ,
-                                   userID: userID)
+                                   imageOfUser:  UIImage(named: "mask3.png")! ,
+                                   userID: userID ,
+                                   lastMessage: nil)
    
       
         onlinePeers.append(message)
-        
-        onlinePeers = onlinePeers.sorted {
-            if let date1 = $0.date,
-            let date2 = $1.date{
-            return date1 > date2
-        } else {
-            return ($0.name)! < ($1.name)!
-            }
-            
-        }
-        
-        self.delegateOfConversations?.reloadData()
-
+        onDataUpdate?(onlinePeers)
     }
+    
+   
     
     func didLostUser(userID: String) {
         var index : Int?
@@ -67,8 +64,7 @@ class CommunicationManager: CommunicatorDelegate {
         }
         if let index = index {
             onlinePeers.remove(at: index)
-            self.delegateOfConversations?.reloadData()
-            self.delegateOfConversation?.reloadData()
+            onDataUpdate?(onlinePeers)
         }
         
     }
@@ -83,21 +79,20 @@ class CommunicationManager: CommunicatorDelegate {
     
     //messages
     func didRecieveMessage(text: String, fromUser: String, toUser: String) {
-        self.text = text
+    
         for (index, user) in onlinePeers.enumerated() {
             if user.userID == fromUser {
-                onlinePeers[index].message = text
+                onlinePeers[index].messages?.append(text)
+                onlinePeers[index].lastMessage = text
                 onlinePeers[index].date = currentTime()
                 onlinePeers.insert(onlinePeers[index], at: 0)
                 onlinePeers.remove(at: index + 1)
                 break
             }
         }
-        
-            
-        self.delegateOfConversations?.reloadData()
-        self.delegateOfConversation?.reloadData()
-        
+        onDataUpdate?(onlinePeers)
+        messageUpdate?(onlinePeers)
+  
     }
 
     func sendMessage(text: String, toUserID: String, completion: ((Bool,Error?) -> ())?) {
@@ -105,14 +100,15 @@ class CommunicationManager: CommunicatorDelegate {
             if success {
                 for (index, user) in (self?.onlinePeers.enumerated())! {
                     if user.userID == toUserID {
-                        self?.onlinePeers[index].message = text
+                        self?.onlinePeers[index].messages?.append(text)
+                        self?.onlinePeers[index].lastMessage = text
                         self?.onlinePeers[index].date = self?.currentTime()
                         self?.onlinePeers.insert((self?.onlinePeers[index])!, at: 0)
                         self?.onlinePeers.remove(at: index + 1)
-                        self?.delegateOfConversations?.reloadData()
                         break
                     }
                 }
+                self?.onDataUpdate?((self?.onlinePeers)!)
                 completion!(success,nil)
             }
             else {
@@ -128,8 +124,6 @@ class CommunicationManager: CommunicatorDelegate {
         let date = Date()
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date as Date)
-        
-        
         if let year = components.year, let month = components.month , let day = components.day ,  let hour = components.hour, let minute = components.minute {
             return dateFormatter.date(from:  "\(day)-\(month)-\(year) \(hour):\(minute)")
         }

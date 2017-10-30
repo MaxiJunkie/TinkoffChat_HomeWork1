@@ -37,7 +37,7 @@ class ConversationsTableViewCell: UITableViewCell , ConversationsCellConfigurati
         if let message = messageOfHistory {
        
         self.name = message.name
-        self.message = message.message
+        self.message = message.lastMessage
         self.date = message.date
         self.online = message.online
         self.hasUnreadMessages = message.hasUnreadMessages
