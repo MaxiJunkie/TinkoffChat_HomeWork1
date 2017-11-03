@@ -13,7 +13,6 @@ protocol CreateQueueProtocol {
 }
 
 
-
 class CreateQueue: CreateQueueProtocol {
     
     let queue = OperationQueue()
