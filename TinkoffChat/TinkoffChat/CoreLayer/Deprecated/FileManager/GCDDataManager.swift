@@ -8,15 +8,9 @@
 
 import Foundation
 
-protocol ReadDataProtocol : class {
-    func readDataFromFile(completion: @escaping (([String: Any]) -> ()), errorBlock: ((NSError) -> ())?)
-}
 
-protocol WriteDataProtocol : class {
-    func writeDataInFile(_ dictionary : [String: Any], completion: (() -> ())?, errorBlock: ((NSError) -> ())?)
-}
 
-class GCDDataManager : ReadDataProtocol, WriteDataProtocol {
+class GCDDataManager  {
     
     let documentsDirectoryPath :NSURL =  NSURL(string: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!)!
     

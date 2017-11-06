@@ -76,6 +76,7 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
             let cell = tableView.dequeueReusableCell(withIdentifier: "incomingCell")!
             if let messageCell = cell as? ChatTableViewCell {
                 if let message = currentMessage["message"] {
+                    messageCell.selectionStyle = .none
                     messageCell.textOfMessage = message
                     messageCell.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
                 }
@@ -86,6 +87,7 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
           let   cell = tableView.dequeueReusableCell(withIdentifier: "outboundCell")!
             if let messageCell = cell as? ChatTableViewCell {
                 if let message = currentMessage["message"] {
+                    messageCell.selectionStyle = .none
                     messageCell.textOfMessage = message
                     messageCell.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
                     }
@@ -94,30 +96,31 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
         }
     }
     
-    // MARK - UITextFieldDelegate
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    @IBAction func sendButton(_ sender: UIButton) {
         
-        textField.resignFirstResponder()
-        if let text = textField.text {
+        if let text = chatTextField.text, text != "" {
             if let userID = self.userID {
-            conversationModel.sendMessage(text: text, toUserID: userID) {(success, error) in
-                if success {
+                conversationModel.sendMessage(text: text, toUserID: userID) {(success, error) in
+                    if success {
                         let messageDictionary: [String: String] = ["sender": "self", "message": text]
                         self.messagesArray.append(messageDictionary)
                         DispatchQueue.main.async { [weak self] in
                             self?.updateTableview()
-                            textField.text = ""
+                            self?.chatTextField.text = ""
                         }
                     }
                 }
             }
         }
+    }
+    
+    
+    // MARK - UITextFieldDelegate
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
+        textField.resignFirstResponder()
+  
         return true
     }
     
@@ -147,7 +150,7 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.chatDialogTableView.endEditing(true)
+        self.view.endEditing(true)
     }
     
     @objc func keyboardWillShow(notification:NSNotification) {

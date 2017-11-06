@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -19,8 +20,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="140" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="UPk-Sh-6i6">
-                                <rect key="frame" x="0.0" y="64" width="375" height="573"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="140" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="UPk-Sh-6i6">
+                                <rect key="frame" x="0.0" y="64" width="375" height="549.5"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="outboundCell" id="9ce-fi-sOd" customClass="ChatTableViewCell" customModule="TinkoffChat" customModuleProvider="target">
@@ -110,22 +111,51 @@
                                     <outlet property="delegate" destination="TzW-DP-TR6" id="pdn-qC-5iv"/>
                                 </connections>
                             </tableView>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="press here" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xcX-Zu-Djb">
-                                <rect key="frame" x="0.0" y="637" width="375" height="30"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
-                            </textField>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h09-iU-yRx">
+                                <rect key="frame" x="0.0" y="613.5" width="375" height="53.5"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iR8-sm-q9G">
+                                        <rect key="frame" x="305" y="8" width="60" height="37.5"/>
+                                        <color key="backgroundColor" red="0.41266733995468008" green="0.56881026938627643" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="iR8-sm-q9G" secondAttribute="height" multiplier="4:2.5" id="5IB-0d-ebg"/>
+                                        </constraints>
+                                        <state key="normal" title="Send">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="sendButton:" destination="TzW-DP-TR6" eventType="touchUpInside" id="nLm-2v-W0B"/>
+                                        </connections>
+                                    </button>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xcX-Zu-Djb">
+                                        <rect key="frame" x="15" y="8" width="275" height="38"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" red="0.89989552567096476" green="0.90123615459944606" blue="0.91370558375634514" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="xcX-Zu-Djb" firstAttribute="top" secondItem="h09-iU-yRx" secondAttribute="top" constant="8" id="7Po-rJ-wTf"/>
+                                    <constraint firstAttribute="bottom" secondItem="iR8-sm-q9G" secondAttribute="bottom" constant="8" id="Fe9-CR-5gr"/>
+                                    <constraint firstAttribute="bottom" secondItem="xcX-Zu-Djb" secondAttribute="bottom" constant="8" id="LZf-gd-GOe"/>
+                                    <constraint firstItem="xcX-Zu-Djb" firstAttribute="leading" secondItem="h09-iU-yRx" secondAttribute="leading" constant="15" id="U3i-wr-Yp2"/>
+                                    <constraint firstItem="iR8-sm-q9G" firstAttribute="top" secondItem="h09-iU-yRx" secondAttribute="top" constant="8" id="YDZ-Af-AUV"/>
+                                    <constraint firstAttribute="width" secondItem="h09-iU-yRx" secondAttribute="height" multiplier="7:1" id="e8M-zD-nJH"/>
+                                    <constraint firstAttribute="trailing" secondItem="iR8-sm-q9G" secondAttribute="trailing" constant="10" id="i49-0u-lAN"/>
+                                    <constraint firstItem="iR8-sm-q9G" firstAttribute="leading" secondItem="xcX-Zu-Djb" secondAttribute="trailing" constant="15" id="sKJ-34-f1b"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="xcX-Zu-Djb" firstAttribute="bottom" secondItem="x8s-ay-mUV" secondAttribute="bottom" id="HYY-qR-S8B"/>
-                            <constraint firstItem="xcX-Zu-Djb" firstAttribute="top" secondItem="UPk-Sh-6i6" secondAttribute="bottom" id="Hrs-ra-fdW"/>
+                            <constraint firstItem="h09-iU-yRx" firstAttribute="leading" secondItem="x8s-ay-mUV" secondAttribute="leading" id="BBD-32-sZ2"/>
+                            <constraint firstItem="h09-iU-yRx" firstAttribute="bottom" secondItem="x8s-ay-mUV" secondAttribute="bottom" id="EgH-PF-b9p"/>
                             <constraint firstItem="UPk-Sh-6i6" firstAttribute="leading" secondItem="x8s-ay-mUV" secondAttribute="leading" id="QjF-K0-zyx"/>
                             <constraint firstItem="UPk-Sh-6i6" firstAttribute="top" secondItem="Zf3-ji-P6L" secondAttribute="top" constant="64" id="Tmq-3D-Mlj"/>
-                            <constraint firstItem="xcX-Zu-Djb" firstAttribute="trailing" secondItem="x8s-ay-mUV" secondAttribute="trailing" id="izb-7h-ivS"/>
                             <constraint firstItem="UPk-Sh-6i6" firstAttribute="trailing" secondItem="x8s-ay-mUV" secondAttribute="trailing" id="pT4-dp-6wF"/>
-                            <constraint firstItem="xcX-Zu-Djb" firstAttribute="leading" secondItem="x8s-ay-mUV" secondAttribute="leading" id="zzg-rM-x84"/>
+                            <constraint firstItem="h09-iU-yRx" firstAttribute="top" secondItem="UPk-Sh-6i6" secondAttribute="bottom" id="ujJ-XW-Nhm"/>
+                            <constraint firstItem="h09-iU-yRx" firstAttribute="trailing" secondItem="x8s-ay-mUV" secondAttribute="trailing" id="yKS-kQ-an3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="x8s-ay-mUV"/>
                     </view>

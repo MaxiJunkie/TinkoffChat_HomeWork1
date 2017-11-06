@@ -8,59 +8,53 @@
 
 import Foundation
 
-enum TypeOfSaving {
-    case globalCentralDispatch
-    case operation
-}
+
 
 protocol ProfileModelProtocol: class {
-    func readDataFromFile(using type: TypeOfSaving, completion: @escaping (([String: Any]) -> ()), errorBlock: ((NSError) -> ())?)
-    func writeDataInFile(using type: TypeOfSaving, _ dictionary : [String: Any], completion: @escaping (() -> ()), errorBlock: ((NSError) -> ())?)
+    func readDataFromCoreData( completion: @escaping ((ProfileDataInterface) -> ()), errorBlock: ((NSError) -> ())?)
+    func writeDataInCoreData(_ profile : ProfileDataInterface, completion: @escaping (() -> ()), errorBlock: ((NSError) -> ())?)
    
 }
 
 class ProfileModel : ProfileModelProtocol {
 
-    
     let readDataService: IReadDataService
     let writeDataService: IWriteDataService
+    
+    var currentProfile = ProfileDataInterface(with: "", userInfo: "", image: nil)
     
     init(readDataService: IReadDataService, writeDataService: IWriteDataService ) {
         self.readDataService = readDataService
         self.writeDataService = writeDataService
     }
     
-    func readDataFromFile(using type: TypeOfSaving, completion: @escaping (([String : Any]) -> ()), errorBlock: ((NSError) -> ())?) {
-        if type == .globalCentralDispatch {
-            readDataService.readDataWithGCD(completionHandler: { (dictionary) in
-                completion(dictionary)
-            }, errorBlock: nil)
-            
-        } else {
-            readDataService.readDataWithOperation(completionHandler: { (dictionary) in
-                completion(dictionary)
-            }, errorBlock: nil)
-        }
+    func readDataFromCoreData(completion: @escaping ((ProfileDataInterface) -> ()), errorBlock: ((NSError) -> ())?) {
+      
+        readDataService.readData(completionHandler: { (profile) in
+            self.currentProfile = profile
+            completion(profile)
+        }, errorBlock: nil)
         
     }
     
-    func writeDataInFile(using type: TypeOfSaving, _ dictionary: [String : Any], completion: @escaping (() -> ()), errorBlock: ((NSError) -> ())?) {
-        if type == .globalCentralDispatch {
-            writeDataService.writeDataWithGCD(dictionary, completionHandler: {
-                completion()
-            }, errorBlock: { error in
-                errorBlock!(error)
-            })
+    func writeDataInCoreData( _ profile: ProfileDataInterface, completion: @escaping (() -> ()), errorBlock: ((NSError) -> ())?) {
+     
+        if currentProfile.name != profile.name {
+            profile.nameIsChanged = true
         }
-        else {
-            writeDataService.writeDataWithOperation(dictionary, completionHandler: {
-                completion()
-            }, errorBlock: { error in
-                if let err = error {
-                   errorBlock!(err)
-                }
-            })
+        if currentProfile.userInfo != profile.userInfo {
+             profile.userInfoIsChanged = true
         }
+        if let isEqual = currentProfile.photoImage?.isEqual(profile.photoImage) {
+            if !isEqual {
+                profile.photoImageIsChanged = true
+            }
+        }
+        
+        writeDataService.writeData(profile) {
+            completion()
+        }
+        
     }
     
     

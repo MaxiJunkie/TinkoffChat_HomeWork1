@@ -9,7 +9,7 @@
 import Foundation
 
 
-class OperationDataManager : Operation , ReadDataProtocol, WriteDataProtocol {
+class OperationDataManager : Operation {
  
     override var isAsynchronous: Bool { return true }
     override var isExecuting: Bool { return state == .executing }

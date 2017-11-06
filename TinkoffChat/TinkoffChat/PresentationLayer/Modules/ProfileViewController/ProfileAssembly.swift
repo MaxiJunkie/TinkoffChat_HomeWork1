@@ -26,28 +26,20 @@ class ProfileAssembly {
     }
     
     private func readDataService() -> IReadDataService {
-        return ReadDataService(GCDDataManager: GCDReadDataFileManager(), operationDataManager: operationDataManager())
+        return ReadDataService(dataManager: readDataManager())
     }
     private func writeDataService() -> IWriteDataService {
-        return WriteDataService(GCDDataManager: GCDWriteDataFileManager(),createQueue: createQueue())
+        return WriteDataService(dataManager: writeDataFileManager())
     }
     
-    private func GCDReadDataFileManager() -> ReadDataProtocol {
-        return GCDDataManager()
+    private func readDataManager() -> ReadDataProtocol {
+        return StorageManager()
     }
     
-    private func GCDWriteDataFileManager() -> WriteDataProtocol {
-        return GCDDataManager()
+    private func writeDataFileManager() -> WriteDataProtocol {
+        return StorageManager()
     }
-    
-    private func operationDataManager() -> ReadDataProtocol {
-        return OperationDataManager()
-    }
-    
-    private func createQueue() -> CreateQueueProtocol {
-        return CreateQueue()
-    }
-    
+
     
     
     

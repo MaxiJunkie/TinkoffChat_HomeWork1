@@ -22,8 +22,7 @@ class CommunicationManager:  CommunicatorDelegate , CommunicationManagerProtocol
     var onlinePeers = [Message]() 
     
     private var communicator = MultipeerCommunicator()
-    weak var delegateOfConversation: CommunicationManagerDelegate?
-    
+  
     var onDataUpdate: ((_ data: [Message]) -> Void)?
     var messageUpdate: ((_ data: [Message]) -> Void)? 
     

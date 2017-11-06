@@ -37,7 +37,7 @@ class MultipeerCommunicator: NSObject, Communicator {
     private var sessions: [String: MCSession] = [:]
    
     private let serviceType = "tinkoff-chat"
-    private let discoveryInfo = ["userName": "MaxiJunkie"]
+    private let discoveryInfo = ["userName": "m.stegnienko"]
    
     private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
     public let serviceBrowser : MCNearbyServiceBrowser
