@@ -11,20 +11,20 @@ import UIKit
 
 protocol CommunicationManagerProtocol: class {
     
-    var onDataUpdate: ((_ data: [Message]) -> Void)? {get set}
-    var messageUpdate: ((_ data: [Message]) -> Void)? {get set}
+    var onDataUpdate: ((_ data: [Conversations]) -> Void)? {get set}
+    var messageUpdate: ((_ data: [Conversations]) -> Void)? {get set}
     func sendMessage(text: String, toUserID: String, completion: ((Bool,Error?) -> ())?)
     
 }
 
 class CommunicationManager:  CommunicatorDelegate , CommunicationManagerProtocol {
     
-    var onlinePeers = [Message]() 
+    var onlinePeers = [Conversations]() 
     
     private var communicator = MultipeerCommunicator()
   
-    var onDataUpdate: ((_ data: [Message]) -> Void)?
-    var messageUpdate: ((_ data: [Message]) -> Void)? 
+    var onDataUpdate: ((_ data: [Conversations]) -> Void)?
+    var messageUpdate: ((_ data: [Conversations]) -> Void)?
     
     init() {
         communicator.delegate = self
@@ -32,12 +32,14 @@ class CommunicationManager:  CommunicatorDelegate , CommunicationManagerProtocol
     
     func didFoundUser(userID: String, userName: String) {
 
-        for user in onlinePeers {
+        for (i, user) in onlinePeers.enumerated() {
             if user.userID == userID {
+                onlinePeers[i].online = true
+                onDataUpdate?(onlinePeers)
                 return
             }
         }
-        let message = Message.init(name: userName,
+        let conversation = Conversations.init(name: userName,
                                    messages: [],
                                    date: nil,
                                    online: true,
@@ -47,7 +49,7 @@ class CommunicationManager:  CommunicatorDelegate , CommunicationManagerProtocol
                                    lastMessage: nil)
    
       
-        onlinePeers.append(message)
+        onlinePeers.append(conversation)
         onDataUpdate?(onlinePeers)
     }
     
@@ -62,7 +64,8 @@ class CommunicationManager:  CommunicatorDelegate , CommunicationManagerProtocol
             }
         }
         if let index = index {
-            onlinePeers.remove(at: index)
+          //  onlinePeers.remove(at: index)
+            onlinePeers[index].online = false
             onDataUpdate?(onlinePeers)
         }
         

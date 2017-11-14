@@ -42,16 +42,16 @@ extension AppUser {
         }
         
         if appUser == nil {
-            appUser = AppUser.insertAppUser(in: context)
+            appUser = AppUser.insertCurrentAppUser(in: context)
+         
         }
-        
         return appUser
     }
     
-    static func insertAppUser(in context: NSManagedObjectContext) -> AppUser? {
+    static func insertCurrentAppUser(in context: NSManagedObjectContext) -> AppUser? {
         if let appUser = NSEntityDescription.insertNewObject(forEntityName: "AppUser", into: context) as? AppUser {
             if appUser.currentUser == nil {
-                let currentUser = User.findOrInsertUser(with: User.generateUserIdString(), in: context)
+                let currentUser = User.insertUser(with: User.generateCurrentUserIdString(), in: context)
                 currentUser?.name = User.generateCurrentUserNameString()
                 appUser.currentUser = currentUser
             }

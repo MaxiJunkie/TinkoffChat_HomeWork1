@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 protocol ConversationsCellConfiguration : class {
     var name :String? {get set}
@@ -30,23 +31,26 @@ class ConversationsTableViewCell: UITableViewCell , ConversationsCellConfigurati
     var hasUnreadMessages: Bool = true
  
     
-    var messageOfHistory : Message? { didSet { updateUI()}}
+    var configuarateMessage : User? { didSet { updateUI()}}
     
     private func updateUI() {
       
-        if let message = messageOfHistory {
+        if let user = configuarateMessage {
        
-        self.name = message.name
-        self.message = message.lastMessage
-        self.date = message.date
-        self.online = message.online
-        self.hasUnreadMessages = message.hasUnreadMessages
+        self.name = user.name
+        self.message = user.typingOfConversation?.lastMessage?.textOfMessage
+        self.date = user.typingOfConversation?.lastMessage?.date
+        self.online = user.isOnline
+        self.hasUnreadMessages = false
             
         nameOfUserLabel?.text = self.name
         imageOfUser?.layer.masksToBounds = true
         imageOfUser?.layer.cornerRadius = (imageOfUser?.bounds.size.height)!/2
-        imageOfUser?.image = message.imageOfUser
-        
+            if let photo = user.photo {
+                imageOfUser?.contentMode = .scaleAspectFill
+                imageOfUser?.image = UIImage.init(data: photo)
+            }
+    
         if self.message != nil {
             
             if self.hasUnreadMessages == true {

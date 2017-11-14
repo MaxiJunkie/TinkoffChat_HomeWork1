@@ -7,31 +7,37 @@
 //
 
 import Foundation
+import CoreData
 
 protocol CommunicationListModelProtocol: class {
     
-    weak var delegate: CommunicationManagerDelegate? { get set }
-    func fetchNewPeers()
+    func fetchNewPeers(completion: (() -> ())?)
+    func fetchedResultsController(completion: ((NSFetchedResultsController<User>) -> ())?)
     
 }
 
 protocol CommunicationManagerDelegate: class {
-    func reloadData(with messages: [Message])
+    func reloadData(with messages: [Conversations])
 }
 
 
+
+
 class ConversationsListModel: CommunicationListModelProtocol {
-    
-    weak var delegate: CommunicationManagerDelegate?
-    
+
     let peersService: IPeersService
+    let writeDataService: IWriteDataService
+    let readDataService: IReadDataService
     
-    init(peersService: IPeersService ) {
+    init(peersService: IPeersService , writeDataService: IWriteDataService, readDataService: IReadDataService) {
         self.peersService = peersService
+        self.writeDataService = writeDataService
+        self.readDataService = readDataService
     }
     
-    func fetchNewPeers()  {
-        peersService.loadNewPeers { (arrayOfPeers : [Message]) in
+    func fetchNewPeers(completion: (() -> ())?)  {
+        
+        peersService.loadNewPeers { (arrayOfPeers : [Conversations]) in
             
             let array = arrayOfPeers.sorted {
                 if let date1 = $0.date,
@@ -41,7 +47,27 @@ class ConversationsListModel: CommunicationListModelProtocol {
                     return $0.name < $1.name
                 }
             }
-            self.delegate?.reloadData(with: array)
+            self.writeNewPeersInCoreData(with: array, completion: {
+             
+                completion!()
+            })
+        }
+        
+        
+    }
+    
+    private func writeNewPeersInCoreData(with peers: [Conversations], completion: (() -> ())?) {
+        
+        writeDataService.writeData(with: peers) {
+            completion!()
         }
     }
+    
+    func fetchedResultsController(completion: ((NSFetchedResultsController<User>) -> ())?) {
+        readDataService.fetchedResultsController { (frc) in
+            completion!(frc)
+        }
+        
+    }
+
 }

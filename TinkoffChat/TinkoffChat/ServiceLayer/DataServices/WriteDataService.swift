@@ -13,6 +13,8 @@ import Foundation
 protocol IWriteDataService {
     
     func writeData(_ profile : ProfileDataInterface, completion: (() -> ())?)
+    func writeData(with conversation: [Conversations] , completion: (() -> ())?)
+    func writeMessageData(with userId: String,message : Message, completion: (() -> ())?)
  
 }
 
@@ -29,6 +31,22 @@ class WriteDataService : IWriteDataService {
         dataManager.updateProfileData(profile: profile) {
             completion!()
         }
+    }
+    
+    func writeData(with conversation: [Conversations] , completion: (() -> ())?) {
+        
+        dataManager.writeNewUsersInStorage(users: conversation) {
+            completion!()
+        }
+        
+    }
+    
+    func writeMessageData(with userId: String,message : Message, completion: (() -> ())?) {
+        
+        dataManager.writeConversationInStorage(with: userId, message: message ) {
+           completion!()
+        }
+
     }
     
 

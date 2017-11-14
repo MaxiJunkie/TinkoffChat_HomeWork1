@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class ConversationViewController: UIViewController, UITableViewDelegate , UITableViewDataSource, UITextFieldDelegate {
 
@@ -19,6 +20,10 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
     var conversationModel: ConversationModelProtocol!
 
     var userID : String?
+    
+    var _fetchedResultsController: NSFetchedResultsController<Messages>?
+    
+    var conversationDataProvider: ConversationDataProvider!
     
     
     static func initConversationVC(with model: ConversationModelProtocol) -> ConversationViewController {
@@ -35,13 +40,30 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         chatTextField.delegate = self
-        
         self.chatDialogTableView.estimatedRowHeight = 140
         self.chatDialogTableView.rowHeight = UITableViewAutomaticDimension
-      
         self.chatDialogTableView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
-        conversationModel.fetchNewMessages()
+     
+        conversationModel.userId = self.userID
+       
+        self.conversationDataProvider = ConversationDataProvider(tableView: chatDialogTableView)
+        
+        
+        conversationModel.fetchedResultsController {[weak self] (frc) in
+      
+            
+            self?.conversationDataProvider.fetchedResultsControllerMessages = frc
+            self?.conversationDataProvider.performFetchMessages()
+        
+            self?.chatDialogTableView.reloadData()
+            
+        }
  
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        conversationModel.fetchNewMessages()
     }
 
     
@@ -54,46 +76,45 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
     // MARK - UITableViewDataSource
     
     func numberOfSections(in tableView: UITableView) -> Int {
+     
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
        
-        return messagesArray.count
+        guard let fetchedObjects = self.conversationDataProvider.fetchedResultsControllerMessages?.fetchedObjects else { return 0 }
+    
+        return fetchedObjects.count
+ 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let currentMessage = messagesArray[messagesArray.count - 1] as Dictionary<String, String>
-        
-        var sender : String = ""
-        
-        if let sen  = currentMessage["sender"] {
-            sender = sen
+        guard let frc = self.conversationDataProvider.fetchedResultsControllerMessages else {
+            return UITableViewCell()
         }
         
-        if  sender == "self" {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "incomingCell")!
+        let message = frc.object(at: indexPath)
+     
+        if  message.messageFromMe == false {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "outboundCell")!
             if let messageCell = cell as? ChatTableViewCell {
-                if let message = currentMessage["message"] {
-                    messageCell.selectionStyle = .none
-                    messageCell.textOfMessage = message
-                    messageCell.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
-                }
+                messageCell.selectionStyle = .none
+                messageCell.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
+                messageCell.textOfMessage = message.textOfMessage
             }
             return cell
         }
         else {
-          let   cell = tableView.dequeueReusableCell(withIdentifier: "outboundCell")!
+            let   cell = tableView.dequeueReusableCell(withIdentifier: "incomingCell")!
             if let messageCell = cell as? ChatTableViewCell {
-                if let message = currentMessage["message"] {
-                    messageCell.selectionStyle = .none
-                    messageCell.textOfMessage = message
-                    messageCell.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
-                    }
-                }
+                messageCell.selectionStyle = .none
+                messageCell.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
+                messageCell.textOfMessage = message.textOfMessage
+            }
             return cell
         }
+        
     }
     
     @IBAction func sendButton(_ sender: UIButton) {
@@ -102,10 +123,7 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
             if let userID = self.userID {
                 conversationModel.sendMessage(text: text, toUserID: userID) {(success, error) in
                     if success {
-                        let messageDictionary: [String: String] = ["sender": "self", "message": text]
-                        self.messagesArray.append(messageDictionary)
                         DispatchQueue.main.async { [weak self] in
-                            self?.updateTableview()
                             self?.chatTextField.text = ""
                         }
                     }
@@ -134,21 +152,7 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
     }
     
     
-    
-    func updateTableview(){
-        
-        self.chatDialogTableView.beginUpdates()
-        let indexPaths = [IndexPath(row: 0, section: 0),]
-        self.chatDialogTableView.insertRows(at: indexPaths, with: .top)
-        self.chatDialogTableView.endUpdates()
- 
-        if self.chatDialogTableView.contentSize.height > self.chatDialogTableView.frame.size.height {
-            
-            chatDialogTableView.scrollToRow(at: IndexPath.init(row: messagesArray.count - 1, section: 0), at: .top, animated: true)
-        }
-        
-    }
-    
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
@@ -179,22 +183,5 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
     
 }
 
-extension ConversationViewController: CommunicationManagerDelegate {
-   
-    func reloadData(with messages: [Message]) {
-      
-        for user in messages {
-            if user.userID == self.userID {
-                if let lastMessage =  user.messages?.last {
-                    let messageDictionary: [String: String] = ["sender": "not", "message": lastMessage]
-                    messagesArray.append(messageDictionary)
-                    DispatchQueue.main.async { [weak self] in
-                        self?.updateTableview()
-                    }
-                    break
-                }
-            }
-        }
-    }
-}
+
 

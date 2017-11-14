@@ -10,7 +10,7 @@ import Foundation
 
 
 protocol IFetchMessagesService {
-    func loadNewMessages(completionHandler: @escaping (([Message]) -> Void))
+    func loadNewMessages(completionHandler: @escaping (([Conversations]) -> Void))
 }
 
 class FetchMessagesService : IFetchMessagesService {
@@ -23,9 +23,9 @@ class FetchMessagesService : IFetchMessagesService {
     }
     
  
-    func loadNewMessages(completionHandler: @escaping (([Message]) -> Void)) {
+    func loadNewMessages(completionHandler: @escaping (([Conversations]) -> Void)) {
         
-        communicationManager.messageUpdate = { (arrayOfPeers : [Message]) in
+        communicationManager.messageUpdate = { (arrayOfPeers : [Conversations]) in
             completionHandler(arrayOfPeers)
         }
     }

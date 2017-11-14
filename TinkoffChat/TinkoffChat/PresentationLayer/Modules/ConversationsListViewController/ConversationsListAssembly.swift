@@ -14,7 +14,7 @@ class ConversationsListAssembly {
         
         let model = communicationModel()
         let conversationListVC = ConversationsListViewController.initConversationsList(with: model)
-        model.delegate = conversationListVC
+      
         return conversationListVC
    
     }
@@ -22,13 +22,24 @@ class ConversationsListAssembly {
     // MARK: - PRIVATE SECTION
     
     private func communicationModel() -> CommunicationListModelProtocol {
-        return ConversationsListModel(peersService: peersService())
+        return ConversationsListModel( peersService: peersService(), writeDataService: writeDataService(), readDataService: readDataService())
     }
     
     private func peersService() -> IPeersService {
         return PeersService(communicationManager: communicationManager())
     }
-    
+    private func writeDataService() -> IWriteDataService {
+        return WriteDataService(dataManager: writeDataFileManager())
+    }
+    private func writeDataFileManager() -> WriteDataProtocol {
+        return StorageManager()
+    }
+    private func readDataService() -> IReadDataService {
+        return ReadDataService(dataManager: readDataManager())
+    }
+    private func readDataManager() -> ReadDataProtocol {
+        return StorageManager()
+    }
     private func communicationManager() -> CommunicationManagerProtocol {
         return RootAssembly.communicationManager
     }

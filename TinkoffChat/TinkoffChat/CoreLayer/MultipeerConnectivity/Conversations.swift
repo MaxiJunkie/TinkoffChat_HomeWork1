@@ -9,14 +9,14 @@
 import Foundation
 import UIKit
 
-public struct Message  {
+public struct Conversations  {
     
     var name :String
     var messages :[String]?
     var date : Date?
     var online : Bool
     var hasUnreadMessages: Bool
-    let imageOfUser: UIImage
+    let imageOfUser: UIImage?
     var userID:  String?
     var lastMessage :String?
 }
