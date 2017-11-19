@@ -68,34 +68,34 @@ class StorageManager: ReadDataProtocol, WriteDataProtocol {
         }
         
  
- 
-        guard let appUser = AppUser.findOrInsertAppUser(in: saveContext) else {
-            return
-        }
-        guard let user = appUser.currentUser else {
-            return
-        }
-        
-        if let name = profile.name {
-            if profile.nameIsChanged {
-                  user.name = name
+        saveContext.perform {
+            guard let appUser = AppUser.findOrInsertAppUser(in: saveContext) else {
+                return
             }
-        }
-        if let userDescription = profile.userInfo {
-             if profile.userInfoIsChanged {
-                user.userInfo = userDescription
+            guard let user = appUser.currentUser else {
+                return
             }
-        }
         
-        if let image = profile.photoImage {
-            if profile.photoImageIsChanged {
-                if let photoData = UIImagePNGRepresentation(image) {
-                    user.photo = photoData
+            if let name = profile.name {
+                if profile.nameIsChanged {
+                    user.name = name
                 }
             }
-        }
+            if let userDescription = profile.userInfo {
+                if profile.userInfoIsChanged {
+                    user.userInfo = userDescription
+                }
+            }
         
-        saveContext.perform {
+            if let image = profile.photoImage {
+                if profile.photoImageIsChanged {
+                    if let photoData = UIImagePNGRepresentation(image) {
+                        user.photo = photoData
+                    }
+                }
+            }
+        
+       
             self.coreDataStack.performSave(context: saveContext) {
                 DispatchQueue.main.async {
                     completion!()

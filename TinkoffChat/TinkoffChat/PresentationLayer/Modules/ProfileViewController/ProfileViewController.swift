@@ -21,7 +21,37 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
     @IBOutlet weak var selectProfilePhotoButton: UIButton!
     @IBOutlet weak var placeholderPhotoProfile: UIImageView!
 
-    var profileDataSetting = ProfileDataInterface.init(with: "", userInfo: "", image: nil)
+    var profileDataSetting = ProfileDataInterface.init(with: "", userInfo: "", image: nil) 
+    
+    
+    var imageProfile: UIImage? {
+        didSet {
+            settingIsChange = true
+            self.profileDataSetting.photoImage = imageProfile
+            self.placeholderPhotoProfile.contentMode = .scaleAspectFill
+            self.placeholderPhotoProfile?.image = imageProfile
+            
+        }
+    }
+    
+    var nameProfile :String? {
+        didSet {
+            settingIsChange = true
+            self.profileDataSetting.name = nameProfile
+            self.userNameTextField?.text = nameProfile
+        }
+    }
+    
+    var userDescription: String? {
+        didSet {
+            settingIsChange = true
+            self.profileDataSetting.userInfo = userDescription
+            self.infoTextField?.text = userDescription
+        }
+    }
+    
+    
+    
     
     var profileModel: ProfileModelProtocol!
     
@@ -46,17 +76,13 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
             
             
             if let name = profile.name {
-                self.profileDataSetting.name = name
-                self.userNameTextField?.text = name
+                self.nameProfile = name
             }
             if let userDescription = profile.userInfo {
-                self.profileDataSetting.userInfo = userDescription
-                self.infoTextField?.text = userDescription
+                self.userDescription = userDescription
             }
             if let photo = profile.photoImage {
-                self.profileDataSetting.photoImage = photo
-                self.placeholderPhotoProfile.contentMode = .scaleAspectFill
-                self.placeholderPhotoProfile?.image = photo
+                self.imageProfile = photo
             }
            
             
@@ -161,6 +187,17 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
             self?.imagePickerWith(sourceType: .camera)
             
         }))
+        alertViewController.addAction(UIAlertAction(title: "Load from network", style: .`default`, handler: { action in
+            
+      
+            let niVC = NetworkImagesAssembly().networkImagesViewCotnroller()
+            
+            self.present(niVC, animated: true, completion: nil)
+            
+            
+        }))
+        
+
         alertViewController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {
             (alertAction: UIAlertAction!) in
         }))
@@ -185,13 +222,8 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            
-            self.placeholderPhotoProfile.contentMode = .scaleAspectFill
-            self.placeholderPhotoProfile.image = pickedImage
-            
-            self.profileDataSetting.photoImage = pickedImage
-            settingIsChange = true
-        
+           
+            self.imageProfile = pickedImage
         }
         
         self.dismiss(animated: true, completion: nil)
@@ -223,14 +255,12 @@ class ProfileViewController: UIViewController , UIImagePickerControllerDelegate 
             if textField == self.userNameTextField {
                 let text = self.profileDataSetting.name ?? ""
                 if text != textField.text {
-                    settingIsChange = true
-                    self.profileDataSetting.name = textField.text
+                    self.nameProfile = textField.text
                 }
             }else {
                 let text = self.profileDataSetting.userInfo ?? ""
                 if text != textField.text {
-                    settingIsChange = true
-                    self.profileDataSetting.userInfo = textField.text
+                    self.userDescription = textField.text
             }
         }
         self.selectProfilePhotoButton.isEnabled = true

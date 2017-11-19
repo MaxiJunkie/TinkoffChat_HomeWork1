@@ -30,6 +30,19 @@
 		F5C2F7781FADE00B003A675E /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2F7771FADE00B003A675E /* CoreDataStack.swift */; };
 		F5C5CD391F9A90B600F901CC /* MultipeerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C5CD381F9A90B600F901CC /* MultipeerCommunicator.swift */; };
 		F5C5CD3D1F9B800800F901CC /* CommunicationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C5CD3C1F9B800800F901CC /* CommunicationManager.swift */; };
+		F5CC74A71FBEF65D002E39CC /* NetworkImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74A61FBEF65D002E39CC /* NetworkImagesViewController.swift */; };
+		F5CC74A91FBEF697002E39CC /* NetworkImagesAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74A81FBEF697002E39CC /* NetworkImagesAssembly.swift */; };
+		F5CC74AB1FBEF6B4002E39CC /* NetworkImagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74AA1FBEF6B4002E39CC /* NetworkImagesModel.swift */; };
+		F5CC74AD1FBEF6CB002E39CC /* NetworkImages.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5CC74AC1FBEF6CB002E39CC /* NetworkImages.storyboard */; };
+		F5CC74AF1FBF0426002E39CC /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74AE1FBF0426002E39CC /* ImageCollectionViewCell.swift */; };
+		F5CC74B31FBF71A8002E39CC /* RequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74B21FBF71A8002E39CC /* RequestManager.swift */; };
+		F5CC74B51FBF726B002E39CC /* IRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74B41FBF726A002E39CC /* IRequestManager.swift */; };
+		F5CC74B91FBF7AB3002E39CC /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74B81FBF7AB3002E39CC /* Parser.swift */; };
+		F5CC74BB1FBF89D7002E39CC /* IRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74BA1FBF89D7002E39CC /* IRequest.swift */; };
+		F5CC74BD1FC031E3002E39CC /* PixabayImagesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74BC1FC031E3002E39CC /* PixabayImagesRequest.swift */; };
+		F5CC74BF1FC0379C002E39CC /* ImagesParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74BE1FC0379C002E39CC /* ImagesParser.swift */; };
+		F5CC74C11FC0408E002E39CC /* RequestsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74C01FC0408E002E39CC /* RequestsFactory.swift */; };
+		F5CC74C41FC0563F002E39CC /* ImagesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74C31FC0563F002E39CC /* ImagesService.swift */; };
 		F5D331931F72C978004BE0DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D331921F72C978004BE0DE /* AppDelegate.swift */; };
 		F5D331951F72C978004BE0DE /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D331941F72C978004BE0DE /* ProfileViewController.swift */; };
 		F5D331981F72C978004BE0DE /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5D331961F72C978004BE0DE /* Profile.storyboard */; };
@@ -73,6 +86,19 @@
 		F5C2F7771FADE00B003A675E /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		F5C5CD381F9A90B600F901CC /* MultipeerCommunicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerCommunicator.swift; sourceTree = "<group>"; };
 		F5C5CD3C1F9B800800F901CC /* CommunicationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunicationManager.swift; sourceTree = "<group>"; };
+		F5CC74A61FBEF65D002E39CC /* NetworkImagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkImagesViewController.swift; sourceTree = "<group>"; };
+		F5CC74A81FBEF697002E39CC /* NetworkImagesAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkImagesAssembly.swift; sourceTree = "<group>"; };
+		F5CC74AA1FBEF6B4002E39CC /* NetworkImagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkImagesModel.swift; sourceTree = "<group>"; };
+		F5CC74AC1FBEF6CB002E39CC /* NetworkImages.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NetworkImages.storyboard; sourceTree = "<group>"; };
+		F5CC74AE1FBF0426002E39CC /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		F5CC74B21FBF71A8002E39CC /* RequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestManager.swift; sourceTree = "<group>"; };
+		F5CC74B41FBF726A002E39CC /* IRequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRequestManager.swift; sourceTree = "<group>"; };
+		F5CC74B81FBF7AB3002E39CC /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		F5CC74BA1FBF89D7002E39CC /* IRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRequest.swift; sourceTree = "<group>"; };
+		F5CC74BC1FC031E3002E39CC /* PixabayImagesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixabayImagesRequest.swift; sourceTree = "<group>"; };
+		F5CC74BE1FC0379C002E39CC /* ImagesParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesParser.swift; sourceTree = "<group>"; };
+		F5CC74C01FC0408E002E39CC /* RequestsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsFactory.swift; sourceTree = "<group>"; };
+		F5CC74C31FC0563F002E39CC /* ImagesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesService.swift; sourceTree = "<group>"; };
 		F5D3318F1F72C978004BE0DE /* TinkoffChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinkoffChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5D331921F72C978004BE0DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F5D331941F72C978004BE0DE /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -137,6 +163,8 @@
 		F55D33851FA5E0110019D515 /* CoreLayer */ = {
 			isa = PBXGroup;
 			children = (
+				F5CC74B01FBF716B002E39CC /* Networking */,
+				F5CC74B11FBF7184002E39CC /* RequestManager */,
 				F5C2F7751FADDF53003A675E /* Core Data */,
 				F5C2F7761FADDF5B003A675E /* MultipeerConnectivity */,
 				F5D3F7CF1FAF8DE00051F1E0 /* Deprecated */,
@@ -182,7 +210,7 @@
 				F5C2AAAA1FA4A54300FB028F /* ConversationsListViewController */,
 				F55D33881FA5E6E20019D515 /* ConversationViewController */,
 				F5A6AE191FA669C5004F54E8 /* ProfileViewController */,
-				F55782121FBB095300799BB2 /* ConversationDataProvider.swift */,
+				F5CC74A51FBEF5FD002E39CC /* NetworkImagesViewController */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -190,6 +218,7 @@
 		F5C2AAAA1FA4A54300FB028F /* ConversationsListViewController */ = {
 			isa = PBXGroup;
 			children = (
+				F55782121FBB095300799BB2 /* ConversationDataProvider.swift */,
 				F5C2AAAD1FA4AAA700FB028F /* ConversationsListAssembly.swift */,
 				F5C2AAB01FA5044300FB028F /* ConversationsListModel.swift */,
 				F550A20B1F88166F0077A1E0 /* ConversationsListViewController.swift */,
@@ -236,6 +265,63 @@
 				F50062F21F9240DF00996929 /* OperationDataManager.swift */,
 			);
 			path = FileManager;
+			sourceTree = "<group>";
+		};
+		F5CC74A51FBEF5FD002E39CC /* NetworkImagesViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F5CC74A81FBEF697002E39CC /* NetworkImagesAssembly.swift */,
+				F5CC74AA1FBEF6B4002E39CC /* NetworkImagesModel.swift */,
+				F5CC74A61FBEF65D002E39CC /* NetworkImagesViewController.swift */,
+				F5CC74AE1FBF0426002E39CC /* ImageCollectionViewCell.swift */,
+				F5CC74AC1FBEF6CB002E39CC /* NetworkImages.storyboard */,
+			);
+			path = NetworkImagesViewController;
+			sourceTree = "<group>";
+		};
+		F5CC74B01FBF716B002E39CC /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				F5CC74B61FBF7A4B002E39CC /* Parser */,
+				F5CC74B71FBF7A57002E39CC /* Requests */,
+				F5CC74C01FC0408E002E39CC /* RequestsFactory.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		F5CC74B11FBF7184002E39CC /* RequestManager */ = {
+			isa = PBXGroup;
+			children = (
+				F5CC74B41FBF726A002E39CC /* IRequestManager.swift */,
+				F5CC74B21FBF71A8002E39CC /* RequestManager.swift */,
+			);
+			path = RequestManager;
+			sourceTree = "<group>";
+		};
+		F5CC74B61FBF7A4B002E39CC /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				F5CC74B81FBF7AB3002E39CC /* Parser.swift */,
+				F5CC74BE1FC0379C002E39CC /* ImagesParser.swift */,
+			);
+			path = Parser;
+			sourceTree = "<group>";
+		};
+		F5CC74B71FBF7A57002E39CC /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+				F5CC74BA1FBF89D7002E39CC /* IRequest.swift */,
+				F5CC74BC1FC031E3002E39CC /* PixabayImagesRequest.swift */,
+			);
+			path = Requests;
+			sourceTree = "<group>";
+		};
+		F5CC74C21FC05616002E39CC /* NetworkServices */ = {
+			isa = PBXGroup;
+			children = (
+				F5CC74C31FC0563F002E39CC /* ImagesService.swift */,
+			);
+			path = NetworkServices;
 			sourceTree = "<group>";
 		};
 		F5D331861F72C978004BE0DE = {
@@ -299,6 +385,7 @@
 		F5D62FDE1FA531C3003B6080 /* ServiceLayer */ = {
 			isa = PBXGroup;
 			children = (
+				F5CC74C21FC05616002E39CC /* NetworkServices */,
 				F5D3F7D01FAF8E530051F1E0 /* ConversationServices */,
 				F559CAA41FAF8EBC00FB42F2 /* DataServices */,
 			);
@@ -371,6 +458,7 @@
 				F5D3319D1F72C978004BE0DE /* Assets.xcassets in Resources */,
 				F5C2AAA71FA4970D00FB028F /* Conversation.storyboard in Resources */,
 				F5D331A81F72D1A6004BE0DE /* Media.xcassets in Resources */,
+				F5CC74AD1FBEF6CB002E39CC /* NetworkImages.storyboard in Resources */,
 				F5D331981F72C978004BE0DE /* Profile.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -390,17 +478,26 @@
 				F5C5CD391F9A90B600F901CC /* MultipeerCommunicator.swift in Sources */,
 				F5820E1E1FBAC9E500E68748 /* Message.swift in Sources */,
 				F5E471D61FA7397B002EA9FB /* ReadDataService.swift in Sources */,
+				F5CC74A71FBEF65D002E39CC /* NetworkImagesViewController.swift in Sources */,
 				F5D610991FA5F312004161A7 /* SendMessageService.swift in Sources */,
+				F5CC74B91FBF7AB3002E39CC /* Parser.swift in Sources */,
+				F5CC74C41FC0563F002E39CC /* ImagesService.swift in Sources */,
+				F5CC74C11FC0408E002E39CC /* RequestsFactory.swift in Sources */,
+				F5CC74B31FBF71A8002E39CC /* RequestManager.swift in Sources */,
 				F5B6ADEE1FB783E200F676FF /* Conversation.swift in Sources */,
 				F5D331951F72C978004BE0DE /* ProfileViewController.swift in Sources */,
 				F50062F11F9240D200996929 /* GCDDataManager.swift in Sources */,
+				F5CC74BB1FBF89D7002E39CC /* IRequest.swift in Sources */,
+				F5CC74BF1FC0379C002E39CC /* ImagesParser.swift in Sources */,
 				F5C2AAAE1FA4AAA700FB028F /* ConversationsListAssembly.swift in Sources */,
 				F563645E1F89585B00DC57BD /* ConversationViewController.swift in Sources */,
 				F550A2101F88E3B70077A1E0 /* Conversations.swift in Sources */,
 				F56364601F89692700DC57BD /* ChatTableViewCell.swift in Sources */,
 				F5A6AE1B1FA67159004F54E8 /* FetchMessagesService.swift in Sources */,
+				F5CC74AF1FBF0426002E39CC /* ImageCollectionViewCell.swift in Sources */,
 				F5E471D81FA73989002EA9FB /* WriteDataService.swift in Sources */,
 				F5E1004E1FB05DAA00D57D54 /* AppUser.swift in Sources */,
+				F5CC74BD1FC031E3002E39CC /* PixabayImagesRequest.swift in Sources */,
 				F5E100521FB074E200D57D54 /* ProfileDataInterface.swift in Sources */,
 				F5D610941FA5F29A004161A7 /* ConversationAssembly.swift in Sources */,
 				F5D331931F72C978004BE0DE /* AppDelegate.swift in Sources */,
@@ -411,9 +508,12 @@
 				F50801C31FAF294B0037DBE8 /* StorageManager.swift in Sources */,
 				F5C5CD3D1F9B800800F901CC /* CommunicationManager.swift in Sources */,
 				F5B6ADF01FB7842500F676FF /* Messages.swift in Sources */,
+				F5CC74A91FBEF697002E39CC /* NetworkImagesAssembly.swift in Sources */,
+				F5CC74AB1FBEF6B4002E39CC /* NetworkImagesModel.swift in Sources */,
 				F5D610971FA5F2C1004161A7 /* ConversationModel.swift in Sources */,
 				F50062F31F9240DF00996929 /* OperationDataManager.swift in Sources */,
 				F5C0FAA61FAB62EC0067C16A /* TinkoffChatModel.xcdatamodeld in Sources */,
+				F5CC74B51FBF726B002E39CC /* IRequestManager.swift in Sources */,
 				F5E471DA1FA75095002EA9FB /* CreateQueue.swift in Sources */,
 				F55782131FBB095300799BB2 /* ConversationDataProvider.swift in Sources */,
 			);
