@@ -18,16 +18,15 @@ protocol ReadDataProtocol : class {
 
 protocol WriteDataProtocol : class {
    func updateProfileData(profile : ProfileDataInterface, completion: (() -> ())?)
-   func writeNewUsersInStorage(users: [Conversations], completion: (() -> ())?)
-   func writeConversationInStorage(with userId: String , message: Message ,completion: (() -> ())?)
 }
 
 class StorageManager: ReadDataProtocol, WriteDataProtocol {
   
     private let coreDataStack = CoreDataStack()
+    
+    static let saveContext = CoreDataStack().saveContext
 
-    static let saveContextForConversations = CoreDataStack().saveContext
-    static let saveContextForConversation = CoreDataStack().saveContext
+    //MARK: Profile
     
     func fetchProfileData(completion: ((ProfileDataInterface) -> ())?) {
        
@@ -109,93 +108,86 @@ class StorageManager: ReadDataProtocol, WriteDataProtocol {
     
      // MARK: Users
     
-    func writeNewUsersInStorage(users: [Conversations], completion: (() -> ())?) {
-       
-   
-        guard let saveContext = StorageManager.saveContextForConversations else {
+    
+    func updateUser(userId: String, userName: String?, isOnline: Bool, completion: (() -> ())?) {
+        
+        guard let saveContext = StorageManager.saveContext else {
             print("No context")
             return
         }
-      
-        let setOfUsers :NSSet? = []
-    
-        for user in users {
-      
-            guard let userId = user.userID else { return }
-           
-            let conversationId = "conversationOf\(userId)"
+        
+        saveContext.perform {
             
             if let newUser = User.findOrInsertUser(with: userId, in: saveContext) {
-               
-                if user.online == false {
-                    User.remove(user: newUser, in: saveContext)
-                    let messages = Messages.findMessages(withConversationId: conversationId, in: saveContext)
-                    Messages.remove(messages: messages, in: saveContext)
-                    
-                } else {
-                
-                newUser.name = user.name
-                newUser.isOnline = user.online
-                
-                if let photo = user.imageOfUser {
-                  newUser.photo =  UIImagePNGRepresentation(photo)
-            
-                }
-                
-                if let conversation = Conversation.findOrInsertConversation(with: conversationId, in: saveContext) {
-               
-                    conversation.isOnline = user.online
-                    
-                    var messages = Messages.findMessages(withConversationId: conversationId, in: saveContext)
-            
-                    if let lastMessage = Messages.insertMessages(with: user.lastMessage , in: saveContext) {
-                        
-                        lastMessage.date = user.date
-                        lastMessage.messageFromMe = false
-                      
-                        messages.append(lastMessage)
-                        
-                        conversation.lastMessage = lastMessage
-    
-                    }
-                    newUser.typingOfConversation = conversation
-                }
-                    setOfUsers?.adding(newUser)
+                newUser.name = userName
+                newUser.isOnline = isOnline
+                if let photo = UIImage(named: "mask3.png") {
+                    newUser.photo =  UIImagePNGRepresentation(photo)
                 }
             }
+            self.coreDataStack.performSave(context: saveContext, completionHandler: nil)
+        
         }
-       
-      
-        guard let appUser = AppUser.findOrInsertAppUser(in: saveContext) else {
+        
+        
+    }
+    
+    //MARK: Messages
+    
+    
+    func insertMessage(forUserId: String, message: Message , completionHandler:(() -> ())?) {
+        
+        guard let saveContext = StorageManager.saveContext else {
+            print("No context")
             return
         }
         
-        appUser.users = setOfUsers
-    
         saveContext.perform {
-            self.coreDataStack.performSave(context: saveContext) {
-                DispatchQueue.main.async {
-                    completion!()
+            
+            guard let user = User.findOrInsertUser(with: forUserId, in: saveContext) else {return}
+            let conversationId = "conversationIdOf\(forUserId)"
+            if let conversation = Conversation.findOrInsertConversation(with: conversationId, in: saveContext) {
+                var messages = Messages.findMessages(withConversationId: conversationId, in: saveContext)
+                if let newMessage = self.insert(message: message, in: saveContext) {
+                    messages.append(newMessage)
+                    conversation.lastMessage = newMessage
                 }
+                let setOfMessages :NSSet? = NSSet.init(array: messages)
+                conversation.messages = setOfMessages
+                user.typingOfConversation = conversation
             }
+            
+            self.coreDataStack.performSave(context: saveContext, completionHandler: nil)
         }
     }
     
     
+    
+    private func insert(message: Message, in context: NSManagedObjectContext) -> Messages? {
+        guard let newMessage = Messages.insertMessages(with: message.text, in: context) else {return nil}
+        newMessage.messageFromMe = message.messageFromMe
+        newMessage.date = message.date
+        return newMessage
+    }
+    
+    
+    
+    // MARK: FetchedResultsControllers
+    
     func fetchedResultsControllerOfUsers(completion: ((NSFetchedResultsController<User>) -> ())?) {
     
         
-        guard let saveContext = StorageManager.saveContextForConversations else {
+        guard let saveContext = StorageManager.saveContext else {
             print("No context")
             return
         }
         
+ 
         saveContext.perform {
        
             let fetchRequest = NSFetchRequest<User>(entityName: "User")
         
             let sortByName = NSSortDescriptor(key: "name", ascending: false)
-            
             
             fetchRequest.sortDescriptors = [sortByName]
             fetchRequest.fetchBatchSize = 20
@@ -216,54 +208,10 @@ class StorageManager: ReadDataProtocol, WriteDataProtocol {
     
     
     
-    // MARK: Conversation
-    
-    func writeConversationInStorage(with userId: String , message: Message ,completion: (() -> ())?) {
-        
-        guard let saveContext = StorageManager.saveContextForConversation else {
-            print("No context")
-            return
-        }
-        
-        let conversationId = "conversationOf\(userId)"
-        
-        if let conversation = Conversation.findOrInsertConversation(with: conversationId, in: saveContext) {
-      
-            var messages = Messages.findMessages(withConversationId: conversation.conversationId!, in: saveContext)
-          
-            if let newMessage = Messages.insertMessages(with: message.text, in: saveContext) {
-               
-                if message.typeOfMessage == .incoming {
-                   newMessage.messageFromMe = false
-                } else {
-                   newMessage.messageFromMe = true
-                }
-                
-                newMessage.date = message.date
-                messages.append(newMessage)
-                conversation.lastMessage = newMessage
-                
-            }
-            
-            let setOfMessages :NSSet? = NSSet.init(array: messages)
-            conversation.messages = setOfMessages
-          
-        }
-        
-        
-        saveContext.perform {
-            self.coreDataStack.performSave(context: saveContext) {
-                DispatchQueue.main.async {
-                    completion!()
-                }
-            }
-        }
-    }
-    
-    
+
     func fetchedResultsControllerOfConversation(with conversationId: String , completion: ((NSFetchedResultsController<Messages>) -> ())?) {
         
-        guard let saveContext = StorageManager.saveContextForConversation else {
+        guard let saveContext = StorageManager.saveContext else {
             print("No context")
             return
         }
@@ -277,7 +225,7 @@ class StorageManager: ReadDataProtocol, WriteDataProtocol {
             fetchRequest.sortDescriptors = [sortByDate]
             fetchRequest.fetchBatchSize = 20
             
-            let predicate = NSPredicate(format: "conversation.conversationId == %@","conversationOf\(conversationId)")
+            let predicate = NSPredicate(format: "conversation.conversationId == %@","conversationIdOf\(conversationId)")
             
             fetchRequest.predicate = predicate
             
@@ -292,5 +240,9 @@ class StorageManager: ReadDataProtocol, WriteDataProtocol {
     }
     
     
+    
+    
+    
+
 }
 

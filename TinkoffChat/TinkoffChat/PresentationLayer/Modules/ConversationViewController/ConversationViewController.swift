@@ -51,7 +51,6 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
         
         conversationModel.fetchedResultsController {[weak self] (frc) in
       
-            
             self?.conversationDataProvider.fetchedResultsControllerMessages = frc
             self?.conversationDataProvider.performFetchMessages()
         
@@ -60,12 +59,6 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
         }
  
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        conversationModel.fetchNewMessages()
-    }
-
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: self.view.window)

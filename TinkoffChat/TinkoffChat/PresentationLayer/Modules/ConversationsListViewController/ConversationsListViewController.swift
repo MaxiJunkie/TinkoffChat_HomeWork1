@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import MultipeerConnectivity
 import CoreData
 
 class ConversationsListViewController: UIViewController , UITableViewDelegate , UITableViewDataSource  {

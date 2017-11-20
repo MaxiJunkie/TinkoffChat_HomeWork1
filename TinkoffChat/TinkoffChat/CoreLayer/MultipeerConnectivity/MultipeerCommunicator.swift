@@ -60,6 +60,11 @@ class MultipeerCommunicator: NSObject, Communicator {
     deinit {
         self.serviceAdvertiser.stopAdvertisingPeer()
         self.serviceBrowser.stopBrowsingForPeers()
+        
+        self.sessions.forEach { (key : String , value: MCSession) in
+            value.disconnect()
+        }
+        
     }
  
     func createSession(forUser userID: String) -> MCSession {
@@ -123,13 +128,13 @@ class MultipeerCommunicator: NSObject, Communicator {
 extension MultipeerCommunicator: MCNearbyServiceBrowserDelegate {
   
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        
+         
         let session = createSession(forUser: peerID.displayName)
-            if !session.connectedPeers.contains(peerID) {
-                let userName = info?["userName"] ?? "unknown User"
+            let userName = info?["userName"] ?? "unknown User"
+            if session.connectedPeers.contains(peerID) == false {
                 browser.invitePeer(peerID, to: session, withContext: nil, timeout: 30)
-                delegate?.didFoundUser(userID: peerID.displayName, userName: userName)
             }
+        delegate?.didFoundUser(userID: peerID.displayName, userName: userName)
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {

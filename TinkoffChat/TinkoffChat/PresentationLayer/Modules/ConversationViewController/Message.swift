@@ -8,25 +8,21 @@
 
 import Foundation
 
-enum TypeOfMessage {
-    case incoming
-    case outcoming
-}
 
 class Message {
     let text : String
     var date : Date
-    let typeOfMessage: TypeOfMessage
+    let messageFromMe: Bool
     
-    init(text: String, date: Date, typeOfMessage: TypeOfMessage) {
+    init(text: String, date: Date, messageFromMe: Bool) {
         self.text = text
         self.date = date
-        self.typeOfMessage = typeOfMessage
+        self.messageFromMe = messageFromMe
     }
 
-    init(withCurrentTimeAndText text: String,typeOfMessage: TypeOfMessage) {
+    init(withCurrentTimeAndText text: String,messageFromMe: Bool) {
         self.text = text
-        self.typeOfMessage = typeOfMessage
+        self.messageFromMe = messageFromMe
         self.date = Date.init()
         if let currentTime = currentTime() {
             self.date = currentTime

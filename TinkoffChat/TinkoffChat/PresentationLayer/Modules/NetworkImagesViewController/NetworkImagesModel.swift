@@ -26,7 +26,6 @@ class NetworkImagesModel: INetworkImagesModel {
     
     let imagesService: IImagesService
 
-    
     init(imagesService: IImagesService) {
         self.imagesService = imagesService
     }

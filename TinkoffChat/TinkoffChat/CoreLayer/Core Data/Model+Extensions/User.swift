@@ -31,11 +31,12 @@ extension User {
     
     static func remove(user : User, in context: NSManagedObjectContext) {
        
-       user.appUser = nil
-       user.conversations = nil
-       user.typingOfConversation = nil
-       user.currentAppUser = nil
-       context.delete(user)
+        user.appUser = nil
+        user.conversations = nil
+        user.typingOfConversation?.messages = nil
+        user.typingOfConversation = nil
+        user.currentAppUser = nil
+        context.delete(user)
         
     }
     

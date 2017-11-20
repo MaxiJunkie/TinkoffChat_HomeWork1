@@ -67,6 +67,7 @@ extension ConversationDataProvider: NSFetchedResultsControllerDelegate {
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         DispatchQueue.main.async {
+       
             switch type {
             case .delete:
                 
@@ -82,6 +83,7 @@ extension ConversationDataProvider: NSFetchedResultsControllerDelegate {
                 
             case .insert:
                 if controller == self.fetchedResultsControllerMessages {
+                    
                     let indexPaths = [IndexPath(row: 0, section: 0),]
                     self.tableView.insertRows(at: indexPaths, with: .automatic)
                 }

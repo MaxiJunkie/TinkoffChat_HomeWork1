@@ -22,16 +22,13 @@ protocol CommunicationManagerDelegate: class {
 
 
 
-
 class ConversationsListModel: CommunicationListModelProtocol {
 
     let peersService: IPeersService
-    let writeDataService: IWriteDataService
     let readDataService: IReadDataService
     
-    init(peersService: IPeersService , writeDataService: IWriteDataService, readDataService: IReadDataService) {
+    init(peersService: IPeersService , readDataService: IReadDataService) {
         self.peersService = peersService
-        self.writeDataService = writeDataService
         self.readDataService = readDataService
     }
     
@@ -39,30 +36,10 @@ class ConversationsListModel: CommunicationListModelProtocol {
         
         peersService.loadNewPeers { (arrayOfPeers : [Conversations]) in
             
-            let array = arrayOfPeers.sorted {
-                if let date1 = $0.date,
-                    let date2 = $1.date{
-                    return date1 > date2
-                } else {
-                    return $0.name < $1.name
-                }
-            }
-            self.writeNewPeersInCoreData(with: array, completion: {
-             
-                completion!()
-            })
-        }
-        
-        
-    }
-    
-    private func writeNewPeersInCoreData(with peers: [Conversations], completion: (() -> ())?) {
-        
-        writeDataService.writeData(with: peers) {
-            completion!()
         }
     }
     
+  
     func fetchedResultsController(completion: ((NSFetchedResultsController<User>) -> ())?) {
         readDataService.fetchedResultsController { (frc) in
             completion!(frc)

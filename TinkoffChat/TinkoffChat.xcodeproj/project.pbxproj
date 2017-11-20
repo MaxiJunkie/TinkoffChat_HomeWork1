@@ -18,7 +18,6 @@
 		F563645E1F89585B00DC57BD /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F563645D1F89585B00DC57BD /* ConversationViewController.swift */; };
 		F56364601F89692700DC57BD /* ChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F563645F1F89692700DC57BD /* ChatTableViewCell.swift */; };
 		F5820E1E1FBAC9E500E68748 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5820E1D1FBAC9E500E68748 /* Message.swift */; };
-		F5A6AE1B1FA67159004F54E8 /* FetchMessagesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A6AE1A1FA67159004F54E8 /* FetchMessagesService.swift */; };
 		F5B6ADEE1FB783E200F676FF /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B6ADED1FB783E200F676FF /* Conversation.swift */; };
 		F5B6ADF01FB7842500F676FF /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B6ADEF1FB7842500F676FF /* Messages.swift */; };
 		F5C0FAA61FAB62EC0067C16A /* TinkoffChatModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F5C0FAA41FAB62EC0067C16A /* TinkoffChatModel.xcdatamodeld */; };
@@ -43,6 +42,7 @@
 		F5CC74BF1FC0379C002E39CC /* ImagesParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74BE1FC0379C002E39CC /* ImagesParser.swift */; };
 		F5CC74C11FC0408E002E39CC /* RequestsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74C01FC0408E002E39CC /* RequestsFactory.swift */; };
 		F5CC74C41FC0563F002E39CC /* ImagesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74C31FC0563F002E39CC /* ImagesService.swift */; };
+		F5CC74C61FC2D9CE002E39CC /* WriteDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CC74C51FC2D9CE002E39CC /* WriteDataService.swift */; };
 		F5D331931F72C978004BE0DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D331921F72C978004BE0DE /* AppDelegate.swift */; };
 		F5D331951F72C978004BE0DE /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D331941F72C978004BE0DE /* ProfileViewController.swift */; };
 		F5D331981F72C978004BE0DE /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5D331961F72C978004BE0DE /* Profile.storyboard */; };
@@ -58,7 +58,6 @@
 		F5E471D21FA72FC1002EA9FB /* ProfileAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E471D11FA72FC1002EA9FB /* ProfileAssembly.swift */; };
 		F5E471D41FA72FD2002EA9FB /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E471D31FA72FD2002EA9FB /* ProfileModel.swift */; };
 		F5E471D61FA7397B002EA9FB /* ReadDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E471D51FA7397B002EA9FB /* ReadDataService.swift */; };
-		F5E471D81FA73989002EA9FB /* WriteDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E471D71FA73989002EA9FB /* WriteDataService.swift */; };
 		F5E471DA1FA75095002EA9FB /* CreateQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E471D91FA75095002EA9FB /* CreateQueue.swift */; };
 /* End PBXBuildFile section */
 
@@ -74,7 +73,6 @@
 		F563645D1F89585B00DC57BD /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
 		F563645F1F89692700DC57BD /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
 		F5820E1D1FBAC9E500E68748 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		F5A6AE1A1FA67159004F54E8 /* FetchMessagesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchMessagesService.swift; sourceTree = "<group>"; };
 		F5B6ADED1FB783E200F676FF /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		F5B6ADEF1FB7842500F676FF /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
 		F5C0FAA51FAB62EC0067C16A /* TinkoffChatModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TinkoffChatModel.xcdatamodel; sourceTree = "<group>"; };
@@ -99,6 +97,7 @@
 		F5CC74BE1FC0379C002E39CC /* ImagesParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesParser.swift; sourceTree = "<group>"; };
 		F5CC74C01FC0408E002E39CC /* RequestsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsFactory.swift; sourceTree = "<group>"; };
 		F5CC74C31FC0563F002E39CC /* ImagesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesService.swift; sourceTree = "<group>"; };
+		F5CC74C51FC2D9CE002E39CC /* WriteDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WriteDataService.swift; sourceTree = "<group>"; };
 		F5D3318F1F72C978004BE0DE /* TinkoffChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinkoffChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5D331921F72C978004BE0DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F5D331941F72C978004BE0DE /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -116,7 +115,6 @@
 		F5E471D11FA72FC1002EA9FB /* ProfileAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAssembly.swift; sourceTree = "<group>"; };
 		F5E471D31FA72FD2002EA9FB /* ProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
 		F5E471D51FA7397B002EA9FB /* ReadDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadDataService.swift; sourceTree = "<group>"; };
-		F5E471D71FA73989002EA9FB /* WriteDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteDataService.swift; sourceTree = "<group>"; };
 		F5E471D91FA75095002EA9FB /* CreateQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateQueue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -155,7 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				F5E471D51FA7397B002EA9FB /* ReadDataService.swift */,
-				F5E471D71FA73989002EA9FB /* WriteDataService.swift */,
+				F5CC74C51FC2D9CE002E39CC /* WriteDataService.swift */,
 			);
 			path = DataServices;
 			sourceTree = "<group>";
@@ -368,7 +366,6 @@
 			children = (
 				F55D33861FA5E1E30019D515 /* PeersService.swift */,
 				F5D610981FA5F312004161A7 /* SendMessageService.swift */,
-				F5A6AE1A1FA67159004F54E8 /* FetchMessagesService.swift */,
 			);
 			path = ConversationServices;
 			sourceTree = "<group>";
@@ -470,6 +467,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5CC74C61FC2D9CE002E39CC /* WriteDataService.swift in Sources */,
 				F550A20E1F88D7F60077A1E0 /* ConversationsTableViewCell.swift in Sources */,
 				F5C2AAAC1FA4A5F800FB028F /* RootAssembly.swift in Sources */,
 				F5C2AAB11FA5044300FB028F /* ConversationsListModel.swift in Sources */,
@@ -493,9 +491,7 @@
 				F563645E1F89585B00DC57BD /* ConversationViewController.swift in Sources */,
 				F550A2101F88E3B70077A1E0 /* Conversations.swift in Sources */,
 				F56364601F89692700DC57BD /* ChatTableViewCell.swift in Sources */,
-				F5A6AE1B1FA67159004F54E8 /* FetchMessagesService.swift in Sources */,
 				F5CC74AF1FBF0426002E39CC /* ImageCollectionViewCell.swift in Sources */,
-				F5E471D81FA73989002EA9FB /* WriteDataService.swift in Sources */,
 				F5E1004E1FB05DAA00D57D54 /* AppUser.swift in Sources */,
 				F5CC74BD1FC031E3002E39CC /* PixabayImagesRequest.swift in Sources */,
 				F5E100521FB074E200D57D54 /* ProfileDataInterface.swift in Sources */,
