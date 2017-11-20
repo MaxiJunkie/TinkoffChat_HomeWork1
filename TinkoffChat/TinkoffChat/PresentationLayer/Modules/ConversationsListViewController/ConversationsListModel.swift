@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import CoreData
 
 protocol CommunicationListModelProtocol: class {
@@ -15,11 +16,6 @@ protocol CommunicationListModelProtocol: class {
     func fetchedResultsController(completion: ((NSFetchedResultsController<User>) -> ())?)
     
 }
-
-protocol CommunicationManagerDelegate: class {
-    func reloadData(with messages: [Conversations])
-}
-
 
 
 class ConversationsListModel: CommunicationListModelProtocol {
@@ -41,10 +37,15 @@ class ConversationsListModel: CommunicationListModelProtocol {
     
   
     func fetchedResultsController(completion: ((NSFetchedResultsController<User>) -> ())?) {
-        readDataService.fetchedResultsController { (frc) in
-            completion!(frc)
+  
+        let predicate = NSPredicate(format: "userId != %@", UIDevice.current.name)
+        
+        let fetchRequest = FetchRequestOptions.init(entityName: "User", sortKey: "name", predicate: predicate)
+        
+        readDataService.fetchedResultsController(with: fetchRequest) { (fetchedResultsController ) in
+             completion!(fetchedResultsController)
         }
         
+        
     }
-
 }

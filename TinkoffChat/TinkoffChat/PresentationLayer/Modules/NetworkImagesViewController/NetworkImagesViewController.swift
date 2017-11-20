@@ -78,19 +78,17 @@ extension NetworkImagesViewController: UICollectionViewDelegate {
         collectionView.deselectItem(at: indexPath, animated: true)
         
         if let presenter = presentingViewController as? ProfileViewController {
-        
+            
+            presenter.activityIndicator.startAnimating()
             DispatchQueue.global(qos: .userInitiated).async {[weak self]  in
-              
+                
                 guard let imageUrl = self?.imagesUrl[indexPath.row] else {return }
-                
                 guard let url = URL(string: imageUrl) else {return}
-                
                 let contentsOfURL = try? Data(contentsOf: url)
-        
                 if  let imageData = contentsOfURL  {
                     DispatchQueue.main.async {
                         presenter.imageProfile = UIImage.init(data: imageData)
-                      
+                        presenter.activityIndicator.stopAnimating()
                     }
                 }
             }

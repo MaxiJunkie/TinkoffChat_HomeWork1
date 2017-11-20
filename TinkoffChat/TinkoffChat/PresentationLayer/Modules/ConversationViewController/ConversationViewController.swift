@@ -20,10 +20,8 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
     var conversationModel: ConversationModelProtocol!
 
     var userID : String?
-    
-    var _fetchedResultsController: NSFetchedResultsController<Messages>?
-    
-    var conversationDataProvider: ConversationDataProvider!
+ 
+    var conversationDataProvider: ConversationDataProvider<Messages>!
     
     
     static func initConversationVC(with model: ConversationModelProtocol) -> ConversationViewController {
@@ -46,13 +44,13 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
      
         conversationModel.userId = self.userID
        
-        self.conversationDataProvider = ConversationDataProvider(tableView: chatDialogTableView)
+        self.conversationDataProvider = ConversationDataProvider(tableView: chatDialogTableView, with: .Conversation)
         
         
         conversationModel.fetchedResultsController {[weak self] (frc) in
       
-            self?.conversationDataProvider.fetchedResultsControllerMessages = frc
-            self?.conversationDataProvider.performFetchMessages()
+            self?.conversationDataProvider.fetchedResultsController = frc
+            self?.conversationDataProvider.performFetch()
         
             self?.chatDialogTableView.reloadData()
             
@@ -75,7 +73,7 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
        
-        guard let fetchedObjects = self.conversationDataProvider.fetchedResultsControllerMessages?.fetchedObjects else { return 0 }
+        guard let fetchedObjects = self.conversationDataProvider.fetchedResultsController?.fetchedObjects else { return 0 }
     
         return fetchedObjects.count
  
@@ -83,7 +81,7 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        guard let frc = self.conversationDataProvider.fetchedResultsControllerMessages else {
+        guard let frc = self.conversationDataProvider.fetchedResultsController else {
             return UITableViewCell()
         }
         

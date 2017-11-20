@@ -11,8 +11,7 @@ import CoreData
 
 protocol IReadDataService {
     func readData(completionHandler: @escaping ((ProfileDataInterface) -> ()), errorBlock: ((NSError) -> ())?)
-    func fetchedResultsController(completion: ((NSFetchedResultsController<User>) -> ())?)
-    func fetchedResultsController(with id: String, completion: ((NSFetchedResultsController<Messages>) -> ())?)
+    func fetchedResultsController<Type>(with fetchRequestOptions: FetchRequestOptions, completion: ((NSFetchedResultsController<Type>) -> ())?)
 }
 
 class ReadDataService : IReadDataService {
@@ -32,18 +31,14 @@ class ReadDataService : IReadDataService {
         
     }
     
-    func fetchedResultsController(completion: ((NSFetchedResultsController<User>) -> ())?) {
+    
+    func fetchedResultsController<Type>(with fetchRequestOptions: FetchRequestOptions, completion: ((NSFetchedResultsController<Type>) -> ())?)  {
         
-        dataManager.fetchedResultsControllerOfUsers { (frc) in
-            completion!(frc)
+        dataManager.fetchedResultsController(with: fetchRequestOptions) { (fetchedResultsController) in
+            completion!(fetchedResultsController)
         }
-        
     }
     
-    func fetchedResultsController(with id: String, completion: ((NSFetchedResultsController<Messages>) -> ())?) {
-        dataManager.fetchedResultsControllerOfConversation(with: id) { (frc) in
-            completion!(frc)
-        }
-    }
+    
     
 }

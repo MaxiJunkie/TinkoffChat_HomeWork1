@@ -10,38 +10,40 @@ import Foundation
 import CoreData
 import UIKit
 
-class ConversationDataProvider : NSObject {
+enum FetchedResultsType {
+    case Conversation
+    case Conversations
+}
+
+
+protocol FetchedResultsControllerType : NSFetchRequestResult {
+    associatedtype ModelType
+}
+
+class ConversationDataProvider<T: NSFetchRequestResult> :  NSObject , FetchedResultsControllerType , NSFetchedResultsControllerDelegate  {
     
-    var fetchedResultsControllerUser: NSFetchedResultsController<User>?  =  NSFetchedResultsController<User>()
-    var fetchedResultsControllerMessages: NSFetchedResultsController<Messages>?  =  NSFetchedResultsController<Messages>()
+    typealias ModelType = T
+    
+    let frcType: FetchedResultsType
+    
+    var fetchedResultsController: NSFetchedResultsController<ModelType>?  =  NSFetchedResultsController<ModelType>()
     
     let tableView: UITableView
-    
-    init(tableView: UITableView) {
-     
+
+    init(tableView: UITableView ,with type: FetchedResultsType ) {
+        
         self.tableView = tableView
-       
+        self.frcType = type
+        
         super.init()
       
     }
-    
    
     func performFetch() {
         
-        self.fetchedResultsControllerUser?.delegate = self
+        self.fetchedResultsController?.delegate = self
         do {
-            try self.fetchedResultsControllerUser?.performFetch()
-            
-        } catch {
-            print("Error of perform fetch \(error)")
-        }
-    }
-    
-    func performFetchMessages() {
-        
-        self.fetchedResultsControllerMessages?.delegate = self
-        do {
-            try self.fetchedResultsControllerMessages?.performFetch()
+            try self.fetchedResultsController?.performFetch()
             
         } catch {
             print("Error of perform fetch \(error)")
@@ -49,10 +51,6 @@ class ConversationDataProvider : NSObject {
     }
     
     
-}
-
-extension ConversationDataProvider: NSFetchedResultsControllerDelegate {
-   
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         DispatchQueue.main.async {
             self.tableView.beginUpdates()
@@ -67,11 +65,11 @@ extension ConversationDataProvider: NSFetchedResultsControllerDelegate {
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         DispatchQueue.main.async {
-       
+            
             switch type {
             case .delete:
                 
-                if controller == self.fetchedResultsControllerMessages {
+                if self.frcType == .Conversation {
                     let indexPaths = [IndexPath(row: 0, section: 0),]
                     self.tableView.deleteRows(at: indexPaths, with: .automatic)
                 }
@@ -82,8 +80,7 @@ extension ConversationDataProvider: NSFetchedResultsControllerDelegate {
                 }
                 
             case .insert:
-                if controller == self.fetchedResultsControllerMessages {
-                    
+                if self.frcType == .Conversation {
                     let indexPaths = [IndexPath(row: 0, section: 0),]
                     self.tableView.insertRows(at: indexPaths, with: .automatic)
                 }
@@ -106,4 +103,8 @@ extension ConversationDataProvider: NSFetchedResultsControllerDelegate {
             }
         }
     }
+    
+    
 }
+
+

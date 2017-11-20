@@ -48,9 +48,15 @@ class ConversationModel : ConversationModelProtocol {
         
         guard let userID = self.userId else {return }
       
-        readDataService.fetchedResultsController(with: userID) { (frc) in
-            completion!(frc)
+        
+        let predicate = NSPredicate(format: "conversation.conversationId == %@","conversationIdOf\(userID)")
+        
+        let fetchRequest = FetchRequestOptions.init(entityName: "Messages", sortKey: "date", predicate: predicate)
+        
+        readDataService.fetchedResultsController(with: fetchRequest) { (fetchedResultsController) in
+             completion!(fetchedResultsController)
         }
+        
         
     }
     

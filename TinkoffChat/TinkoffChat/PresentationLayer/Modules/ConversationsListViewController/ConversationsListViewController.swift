@@ -16,7 +16,7 @@ class ConversationsListViewController: UIViewController , UITableViewDelegate , 
     var model : CommunicationListModelProtocol!
     
   
-    var conversationDataProvider: ConversationDataProvider!
+    var conversationDataProvider: ConversationDataProvider<User>!
     
     required init?(coder aDecoder: NSCoder ) {
         super.init(coder: aDecoder)
@@ -33,11 +33,11 @@ class ConversationsListViewController: UIViewController , UITableViewDelegate , 
     override func viewDidLoad() {
         super.viewDidLoad()
   
-        self.conversationDataProvider = ConversationDataProvider(tableView: ConversationListTableView)
+        self.conversationDataProvider = ConversationDataProvider(tableView: ConversationListTableView, with: .Conversations)
         
         self.model.fetchedResultsController(completion: { [weak self] (frc) in
             
-            self?.conversationDataProvider.fetchedResultsControllerUser = frc
+            self?.conversationDataProvider.fetchedResultsController = frc
             self?.conversationDataProvider.performFetch()
             self?.ConversationListTableView.reloadData()
             
@@ -67,7 +67,7 @@ class ConversationsListViewController: UIViewController , UITableViewDelegate , 
         tableView.deselectRow(at: indexPath, animated: true)
   
         let conversationVC = ConversationAssembly().conversationViewController()
-        if let user = self.conversationDataProvider.fetchedResultsControllerUser?.object(at: indexPath) {
+        if let user = self.conversationDataProvider.fetchedResultsController?.object(at: indexPath) {
             conversationVC.title = user.name
             conversationVC.userID = user.userId
             self.navigationController?.pushViewController(conversationVC, animated: true)
@@ -77,7 +77,7 @@ class ConversationsListViewController: UIViewController , UITableViewDelegate , 
     
     func numberOfSections(in tableView: UITableView) -> Int {
       
-        guard let frc = self.conversationDataProvider.fetchedResultsControllerUser, let sectionsCount =
+        guard let frc = self.conversationDataProvider.fetchedResultsController, let sectionsCount =
             frc.sections?.count else {
                 return 0 }
         return sectionsCount
@@ -86,7 +86,7 @@ class ConversationsListViewController: UIViewController , UITableViewDelegate , 
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        guard let frc = self.conversationDataProvider.fetchedResultsControllerUser, let sections = frc.sections else {
+        guard let frc = self.conversationDataProvider.fetchedResultsController, let sections = frc.sections else {
             return 0 }
         return sections[section].numberOfObjects
         
@@ -97,7 +97,7 @@ class ConversationsListViewController: UIViewController , UITableViewDelegate , 
        
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
    
-        if let user = self.conversationDataProvider.fetchedResultsControllerUser?.object(at: indexPath) {
+        if let user = self.conversationDataProvider.fetchedResultsController?.object(at: indexPath) {
             if let messageCell = cell as? ConversationsTableViewCell {
                
                 messageCell.configuarateMessage = user

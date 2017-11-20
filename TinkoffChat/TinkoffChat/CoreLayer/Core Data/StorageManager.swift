@@ -12,13 +12,22 @@ import UIKit
 
 protocol ReadDataProtocol : class {
     func fetchProfileData(completion: ((ProfileDataInterface) -> ())?)
-    func fetchedResultsControllerOfUsers(completion: ((NSFetchedResultsController<User>) -> ())?)
-    func fetchedResultsControllerOfConversation(with conversationId: String , completion: ((NSFetchedResultsController<Messages>) -> ())?)
+    func fetchedResultsController<Type>(with fetchRequestOptions: FetchRequestOptions, completion: ((NSFetchedResultsController<Type>) -> ())?)
 }
 
 protocol WriteDataProtocol : class {
    func updateProfileData(profile : ProfileDataInterface, completion: (() -> ())?)
 }
+
+
+struct FetchRequestOptions {
+    
+    let entityName: String
+    let sortKey: String
+    let predicate: NSPredicate
+    
+}
+
 
 class StorageManager: ReadDataProtocol, WriteDataProtocol {
   
@@ -174,74 +183,34 @@ class StorageManager: ReadDataProtocol, WriteDataProtocol {
     
     // MARK: FetchedResultsControllers
     
-    func fetchedResultsControllerOfUsers(completion: ((NSFetchedResultsController<User>) -> ())?) {
+   
     
+    func fetchedResultsController<Type>(with fetchRequestOptions: FetchRequestOptions, completion: ((NSFetchedResultsController<Type>) -> ())?) {
         
         guard let saveContext = StorageManager.saveContext else {
             print("No context")
             return
         }
         
- 
         saveContext.perform {
-       
-            let fetchRequest = NSFetchRequest<User>(entityName: "User")
-        
-            let sortByName = NSSortDescriptor(key: "name", ascending: false)
             
+            let fetchRequest = NSFetchRequest<Type>(entityName: fetchRequestOptions.entityName)
+            let sortByName = NSSortDescriptor(key: "\(fetchRequestOptions.sortKey)", ascending: false)
             fetchRequest.sortDescriptors = [sortByName]
             fetchRequest.fetchBatchSize = 20
+            fetchRequest.predicate = fetchRequestOptions.predicate
             
-            let predicate = NSPredicate(format: "userId != %@",UIDevice.current.name)
-            
-            fetchRequest.predicate = predicate
-            
-            let fetchedResultsController = NSFetchedResultsController<User>(fetchRequest:
+            let fetchedResultsController = NSFetchedResultsController<Type>(fetchRequest:
                 fetchRequest, managedObjectContext: saveContext, sectionNameKeyPath: nil,
                               cacheName: nil)
             
             DispatchQueue.main.async {
                 completion!(fetchedResultsController)
             }
+            
         }
+    
     }
-    
-    
-    
-
-    func fetchedResultsControllerOfConversation(with conversationId: String , completion: ((NSFetchedResultsController<Messages>) -> ())?) {
-        
-        guard let saveContext = StorageManager.saveContext else {
-            print("No context")
-            return
-        }
- 
-        saveContext.perform {
-            
-            let fetchRequest = NSFetchRequest<Messages>(entityName: "Messages")
-            
-            let sortByDate = NSSortDescriptor(key: "date", ascending: false)
-            
-            fetchRequest.sortDescriptors = [sortByDate]
-            fetchRequest.fetchBatchSize = 20
-            
-            let predicate = NSPredicate(format: "conversation.conversationId == %@","conversationIdOf\(conversationId)")
-            
-            fetchRequest.predicate = predicate
-            
-            let fetchedResultsController = NSFetchedResultsController<Messages>(fetchRequest:
-                fetchRequest, managedObjectContext: saveContext, sectionNameKeyPath: nil,
-                              cacheName: nil)
-            
-            DispatchQueue.main.async {
-                completion!(fetchedResultsController)
-            }
-        }
-    }
-    
-    
-    
-    
     
 
 }
