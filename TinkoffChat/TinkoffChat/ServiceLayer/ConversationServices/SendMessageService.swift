@@ -25,8 +25,8 @@ class SendMessageService : ISendMessageService {
         communicationManager.sendMessage(text: text, toUserID: toUserID) { (success, error) in
             if success {
                 completion!(success,nil)
-            } else
-            {
+            }
+            else {
                 completion!(false,error)
             }
         }

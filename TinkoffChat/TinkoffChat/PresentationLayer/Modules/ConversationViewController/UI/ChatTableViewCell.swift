@@ -30,6 +30,8 @@ class ChatTableViewCell:  UITableViewCell, MessageCellConfiguration    {
             }
         }
         set {
+            self.selectionStyle = .none
+            self.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
             if self.reuseIdentifier == "outboundCell" {
                 outboandView.layer.masksToBounds = true
                 outboandView.layer.cornerRadius = 2

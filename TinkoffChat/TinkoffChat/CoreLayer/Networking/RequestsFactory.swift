@@ -16,7 +16,17 @@ struct RequestsFactory {
         
             return RequestConfig<ImagesModel>(request: PixabayImagesRequest(), parser: ImagesParser())
         }
+    
+    }
+    
+    struct PixabayImageRequests {
+        
+        static func imageConfig(with url: String) -> RequestConfig<ImageModel> {
+            
+            return RequestConfig<ImageModel>(request: PixabayImageRequest(with: url), parser: ImageParser())
+        }
         
     }
+    
     
 }

@@ -83,7 +83,7 @@ class MultipeerCommunicator: NSObject, Communicator {
     // MARK - Communicator
     
     func sendMessage(string: String, toUserID: String, completionHandler: ((Bool, Error?) -> ())?) {
-    
+ 
         if let session = sessions[toUserID] {
             if let message = createMessage(withText: string) {
                 for peer in session.connectedPeers {
@@ -97,6 +97,8 @@ class MultipeerCommunicator: NSObject, Communicator {
                     }
                 }
             }
+        } else {
+        
         }
     }
 

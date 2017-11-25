@@ -9,13 +9,12 @@
 import UIKit
 import CoreData
 
-class ConversationsListViewController: UIViewController , UITableViewDelegate , UITableViewDataSource  {
+class ConversationsListViewController: AnimationViewController , UITableViewDelegate , UITableViewDataSource  {
 
     @IBOutlet weak var ConversationListTableView: UITableView!
     
     var model : CommunicationListModelProtocol!
     
-  
     var conversationDataProvider: ConversationDataProvider<User>!
     
     required init?(coder aDecoder: NSCoder ) {
@@ -45,6 +44,7 @@ class ConversationsListViewController: UIViewController , UITableViewDelegate , 
     
     }
    
+ 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -70,6 +70,7 @@ class ConversationsListViewController: UIViewController , UITableViewDelegate , 
         if let user = self.conversationDataProvider.fetchedResultsController?.object(at: indexPath) {
             conversationVC.title = user.name
             conversationVC.userID = user.userId
+            conversationVC.userIsOnline = user.isOnline
             self.navigationController?.pushViewController(conversationVC, animated: true)
         }
     

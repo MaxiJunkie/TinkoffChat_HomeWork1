@@ -11,6 +11,7 @@ import Foundation
 
 protocol INetworkImagesModel: class {
     weak var delegate: INetworkImagesModelDelegate? { get set }
+    func fetchImage(with url: String , completionHandler: @escaping (ImageModel?, String?) -> Void)
     func fetchNewImages()
 }
 
@@ -39,6 +40,17 @@ class NetworkImagesModel: INetworkImagesModel {
                 self.delegate?.setup(imagesUrl: model.imagesWithUrl)
             }
         }
+    }
+    
+    func fetchImage(with url: String , completionHandler: @escaping (ImageModel?, String?) -> Void) {
+        
+        imagesService.loadNewImage(with: url) { (imageModel, error) in
+            assert(error == nil, "Error of request")
+            if let model = imageModel {
+                completionHandler(model,nil)
+            }
+        }
+        
     }
     
     

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NetworkImagesViewController: UIViewController {
+class NetworkImagesViewController: AnimationViewController {
 
     @IBOutlet weak var networkImagesCollectionView: UICollectionView!
  
@@ -19,6 +19,7 @@ class NetworkImagesViewController: UIViewController {
     var networkImagesModel: INetworkImagesModel!
     
     var imagesUrl: [String] = []
+    var images : [String:UIImage] = [:]
     
     static func initNetworkImagesVC(with model: INetworkImagesModel) -> NetworkImagesViewController {
         let networkImagesVC = UIStoryboard(name: "NetworkImages", bundle: nil).instantiateViewController(withIdentifier: "NetworkImagesViewController") as! NetworkImagesViewController
@@ -58,14 +59,28 @@ extension NetworkImagesViewController: UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath)
         
-        cell.tag = indexPath.row
-        
+
         if let imageCell = cell as? ImageCollectionViewCell {
-            imageCell.numberOfCell = indexPath.row
-            imageCell.imageUrl = self.imagesUrl[indexPath.row]
-   
+     
+            let url = self.imagesUrl[indexPath.row]
+          
+            imageCell.imageInCell.image = UIImage.init(named: "placeholder")
+            
+            if let cachedImage = self.images[self.imagesUrl[indexPath.row]]  {
+                
+                imageCell.imageInCell?.image = cachedImage
+               
+            } else {
+                
+                networkImagesModel.fetchImage(with: self.imagesUrl[indexPath.row], completionHandler: { (image, error) in
+                    DispatchQueue.main.async { [weak self] in
+                        imageCell.imageInCell?.image = image?.image
+                        self?.images[url] = imageCell.imageInCell?.image
+                    }
+                })
+            }
         }
-        
+       
         return cell
     }
     
@@ -80,18 +95,13 @@ extension NetworkImagesViewController: UICollectionViewDelegate {
         if let presenter = presentingViewController as? ProfileViewController {
             
             presenter.activityIndicator.startAnimating()
-            DispatchQueue.global(qos: .userInitiated).async {[weak self]  in
-                
-                guard let imageUrl = self?.imagesUrl[indexPath.row] else {return }
-                guard let url = URL(string: imageUrl) else {return}
-                let contentsOfURL = try? Data(contentsOf: url)
-                if  let imageData = contentsOfURL  {
-                    DispatchQueue.main.async {
-                        presenter.imageProfile = UIImage.init(data: imageData)
-                        presenter.activityIndicator.stopAnimating()
-                    }
+            networkImagesModel.fetchImage(with: self.imagesUrl[indexPath.row], completionHandler: { (image, error) in
+                DispatchQueue.main.async {
+                    presenter.imageProfile = image?.image
+                    presenter.activityIndicator.stopAnimating()
                 }
-            }
+            })
+            
         }
         self.dismiss(animated: true, completion: nil)
     }

@@ -30,9 +30,7 @@ class ConversationsListModel: CommunicationListModelProtocol {
     
     func fetchNewPeers(completion: (() -> ())?)  {
         
-        peersService.loadNewPeers { (arrayOfPeers : [Conversations]) in
-            
-        }
+      
     }
     
   

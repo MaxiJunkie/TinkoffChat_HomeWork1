@@ -10,6 +10,10 @@
 		F50062F11F9240D200996929 /* GCDDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50062F01F9240D200996929 /* GCDDataManager.swift */; };
 		F50062F31F9240DF00996929 /* OperationDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50062F21F9240DF00996929 /* OperationDataManager.swift */; };
 		F50801C31FAF294B0037DBE8 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50801C21FAF294B0037DBE8 /* StorageManager.swift */; };
+		F54900341FC76B0F002AEB4C /* PixabayImageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54900331FC76B0F002AEB4C /* PixabayImageRequest.swift */; };
+		F54900361FC76D63002AEB4C /* ImageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54900351FC76D63002AEB4C /* ImageParser.swift */; };
+		F54900381FC98328002AEB4C /* ConversationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54900371FC98327002AEB4C /* ConversationAnimator.swift */; };
+		F549003A1FCA083C002AEB4C /* AnimationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54900391FCA083B002AEB4C /* AnimationViewController.swift */; };
 		F550A20C1F88166F0077A1E0 /* ConversationsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F550A20B1F88166F0077A1E0 /* ConversationsListViewController.swift */; };
 		F550A20E1F88D7F60077A1E0 /* ConversationsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F550A20D1F88D7F60077A1E0 /* ConversationsTableViewCell.swift */; };
 		F550A2101F88E3B70077A1E0 /* Conversations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F550A20F1F88E3B70077A1E0 /* Conversations.swift */; };
@@ -65,6 +69,10 @@
 		F50062F01F9240D200996929 /* GCDDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDDataManager.swift; sourceTree = "<group>"; };
 		F50062F21F9240DF00996929 /* OperationDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDataManager.swift; sourceTree = "<group>"; };
 		F50801C21FAF294B0037DBE8 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
+		F54900331FC76B0F002AEB4C /* PixabayImageRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixabayImageRequest.swift; sourceTree = "<group>"; };
+		F54900351FC76D63002AEB4C /* ImageParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageParser.swift; sourceTree = "<group>"; };
+		F54900371FC98327002AEB4C /* ConversationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationAnimator.swift; sourceTree = "<group>"; };
+		F54900391FCA083B002AEB4C /* AnimationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationViewController.swift; sourceTree = "<group>"; };
 		F550A20B1F88166F0077A1E0 /* ConversationsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewController.swift; sourceTree = "<group>"; };
 		F550A20D1F88D7F60077A1E0 /* ConversationsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsTableViewCell.swift; sourceTree = "<group>"; };
 		F550A20F1F88E3B70077A1E0 /* Conversations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversations.swift; sourceTree = "<group>"; };
@@ -173,6 +181,7 @@
 		F55D33881FA5E6E20019D515 /* ConversationViewController */ = {
 			isa = PBXGroup;
 			children = (
+				F54900371FC98327002AEB4C /* ConversationAnimator.swift */,
 				F5820E1D1FBAC9E500E68748 /* Message.swift */,
 				F5D610931FA5F29A004161A7 /* ConversationAssembly.swift */,
 				F5D610961FA5F2C1004161A7 /* ConversationModel.swift */,
@@ -209,6 +218,7 @@
 				F55D33881FA5E6E20019D515 /* ConversationViewController */,
 				F5A6AE191FA669C5004F54E8 /* ProfileViewController */,
 				F5CC74A51FBEF5FD002E39CC /* NetworkImagesViewController */,
+				F54900391FCA083B002AEB4C /* AnimationViewController.swift */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -301,6 +311,7 @@
 			children = (
 				F5CC74B81FBF7AB3002E39CC /* Parser.swift */,
 				F5CC74BE1FC0379C002E39CC /* ImagesParser.swift */,
+				F54900351FC76D63002AEB4C /* ImageParser.swift */,
 			);
 			path = Parser;
 			sourceTree = "<group>";
@@ -310,6 +321,7 @@
 			children = (
 				F5CC74BA1FBF89D7002E39CC /* IRequest.swift */,
 				F5CC74BC1FC031E3002E39CC /* PixabayImagesRequest.swift */,
+				F54900331FC76B0F002AEB4C /* PixabayImageRequest.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -485,6 +497,7 @@
 				F5B6ADEE1FB783E200F676FF /* Conversation.swift in Sources */,
 				F5D331951F72C978004BE0DE /* ProfileViewController.swift in Sources */,
 				F50062F11F9240D200996929 /* GCDDataManager.swift in Sources */,
+				F54900341FC76B0F002AEB4C /* PixabayImageRequest.swift in Sources */,
 				F5CC74BB1FBF89D7002E39CC /* IRequest.swift in Sources */,
 				F5CC74BF1FC0379C002E39CC /* ImagesParser.swift in Sources */,
 				F5C2AAAE1FA4AAA700FB028F /* ConversationsListAssembly.swift in Sources */,
@@ -493,6 +506,8 @@
 				F56364601F89692700DC57BD /* ChatTableViewCell.swift in Sources */,
 				F5CC74AF1FBF0426002E39CC /* ImageCollectionViewCell.swift in Sources */,
 				F5E1004E1FB05DAA00D57D54 /* AppUser.swift in Sources */,
+				F54900381FC98328002AEB4C /* ConversationAnimator.swift in Sources */,
+				F54900361FC76D63002AEB4C /* ImageParser.swift in Sources */,
 				F5CC74BD1FC031E3002E39CC /* PixabayImagesRequest.swift in Sources */,
 				F5E100521FB074E200D57D54 /* ProfileDataInterface.swift in Sources */,
 				F5D610941FA5F29A004161A7 /* ConversationAssembly.swift in Sources */,
@@ -501,6 +516,7 @@
 				F55D33871FA5E1E30019D515 /* PeersService.swift in Sources */,
 				F5C2F7781FADE00B003A675E /* CoreDataStack.swift in Sources */,
 				F5E471D21FA72FC1002EA9FB /* ProfileAssembly.swift in Sources */,
+				F549003A1FCA083C002AEB4C /* AnimationViewController.swift in Sources */,
 				F50801C31FAF294B0037DBE8 /* StorageManager.swift in Sources */,
 				F5C5CD3D1F9B800800F901CC /* CommunicationManager.swift in Sources */,
 				F5B6ADF01FB7842500F676FF /* Messages.swift in Sources */,

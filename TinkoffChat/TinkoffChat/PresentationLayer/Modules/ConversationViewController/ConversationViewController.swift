@@ -9,18 +9,29 @@
 import UIKit
 import CoreData
 
-class ConversationViewController: UIViewController, UITableViewDelegate , UITableViewDataSource, UITextFieldDelegate {
+class ConversationViewController: AnimationViewController, UITableViewDelegate , UITableViewDataSource, UITextFieldDelegate {
 
     @IBOutlet weak var chatDialogTableView: UITableView!
     
+    @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var chatTextField: UITextField!
     
     var messagesArray: [Dictionary<String, String>] = []
-    
     var conversationModel: ConversationModelProtocol!
-
+    let animator = ConversationAnimator()
+    
+    
+    var sendButtonIsActive: Bool = false {
+        didSet {
+            self.sendButton.isEnabled = sendButtonIsActive
+            animator.showAnimationIfUser(isOnline: sendButtonIsActive, for: self.sendButton)
+        }
+    }
+    
     var userID : String?
- 
+    
+    var userIsOnline: Bool = true
+    
     var conversationDataProvider: ConversationDataProvider<Messages>!
     
     
@@ -36,26 +47,62 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        
+        self.chatTextField.addTarget(self, action: #selector(ConversationViewController.textFieldDidChange(_:)), for: .editingChanged)
         chatTextField.delegate = self
         self.chatDialogTableView.estimatedRowHeight = 140
         self.chatDialogTableView.rowHeight = UITableViewAutomaticDimension
         self.chatDialogTableView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
-     
         conversationModel.userId = self.userID
-       
+        self.sendButton.backgroundColor = UIColor.red
+     
+        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 30))
+        titleLabel.textColor = userIsOnline ? UIColor.green : UIColor.black
+        titleLabel.text = self.title
+        titleLabel.textAlignment = .center
+        navigationItem.titleView = titleLabel
+      
+        conversationModel.updateCurrentUser { (userId, userName, isOnline) in
+            
+            self.userIsOnline = isOnline
+   
+            if isOnline == true {
+                if self.sendButtonIsActive == false, self.chatTextField.text != "" {
+                    self.sendButtonIsActive = true
+                }
+                self.animator.showAnimationIfUser(isOnline: true, for: titleLabel)
+            } else {
+                if self.sendButtonIsActive == true {
+                    self.sendButtonIsActive = false
+                }
+                self.animator.showAnimationIfUser(isOnline: false, for: titleLabel)
+            }
+        }
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+     
         self.conversationDataProvider = ConversationDataProvider(tableView: chatDialogTableView, with: .Conversation)
         
-        
         conversationModel.fetchedResultsController {[weak self] (frc) in
-      
+            
             self?.conversationDataProvider.fetchedResultsController = frc
             self?.conversationDataProvider.performFetch()
-        
             self?.chatDialogTableView.reloadData()
             
         }
- 
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        chatTextField.becomeFirstResponder()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let scale: CGFloat =  userIsOnline ? 1.1 : 1.0
+        navigationItem.titleView?.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -90,8 +137,6 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
         if  message.messageFromMe == false {
             let cell = tableView.dequeueReusableCell(withIdentifier: "outboundCell")!
             if let messageCell = cell as? ChatTableViewCell {
-                messageCell.selectionStyle = .none
-                messageCell.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
                 messageCell.textOfMessage = message.textOfMessage
             }
             return cell
@@ -99,8 +144,6 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
         else {
             let   cell = tableView.dequeueReusableCell(withIdentifier: "incomingCell")!
             if let messageCell = cell as? ChatTableViewCell {
-                messageCell.selectionStyle = .none
-                messageCell.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
                 messageCell.textOfMessage = message.textOfMessage
             }
             return cell
@@ -112,27 +155,42 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
         
         if let text = chatTextField.text, text != "" {
             if let userID = self.userID {
+          
                 conversationModel.sendMessage(text: text, toUserID: userID) {(success, error) in
                     if success {
                         DispatchQueue.main.async { [weak self] in
                             self?.chatTextField.text = ""
+                            self?.sendButtonIsActive = false
                         }
                     }
                 }
             }
         }
+        
     }
     
     
     // MARK - UITextFieldDelegate
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
         textField.resignFirstResponder()
-  
         return true
     }
     
+    @objc func textFieldDidChange(_ textField: UITextField) {
+ 
+        if self.chatTextField?.text == "" {
+            self.sendButtonIsActive = false
+        } else {
+            if userIsOnline  {
+                if self.sendButtonIsActive == false {
+                    self.sendButtonIsActive = true
+                }
+            }
+        }
+    }
+    
+  
  
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 1
@@ -142,12 +200,7 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
         return 1
     }
     
-    
 
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
-    }
-    
     @objc func keyboardWillShow(notification:NSNotification) {
         if self.view.bounds.origin.y == 0   {
             adjustingHeight(show: true, notification: notification)
@@ -171,6 +224,7 @@ class ConversationViewController: UIViewController, UITableViewDelegate , UITabl
             self.view.bounds.origin.y = view + changeInHeight
         })
     }
+    
     
 }
 

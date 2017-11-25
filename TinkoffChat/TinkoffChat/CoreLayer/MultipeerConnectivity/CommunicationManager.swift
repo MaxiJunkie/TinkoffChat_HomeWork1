@@ -11,8 +11,7 @@ import UIKit
 
 protocol CommunicationManagerProtocol: class {
     
-    var onDataUpdate: ((_ data: [Conversations]) -> Void)? {get set}
-    var messageUpdate: ((_ data: [Conversations]) -> Void)? {get set}
+    var updateCurrentConversation: ((_ userId: String,_ userName: String?,_ isOnline: Bool) -> Void) {get set}
     func sendMessage(text: String, toUserID: String, completion: ((Bool,Error?) -> ())?)
     
 }
@@ -25,9 +24,7 @@ class CommunicationManager:  CommunicatorDelegate , CommunicationManagerProtocol
     
     private var storageManager = StorageManager()
     
-    
-    var onDataUpdate: ((_ data: [Conversations]) -> Void)?
-    var messageUpdate: ((_ data: [Conversations]) -> Void)?
+    var updateCurrentConversation: ((_ userId: String,_ userName: String?,_ isOnline: Bool) -> Void) = {_,_,_  in }
     
     init() {
         communicator.delegate = self
@@ -35,12 +32,14 @@ class CommunicationManager:  CommunicatorDelegate , CommunicationManagerProtocol
     
     func didFoundUser(userID: String, userName: String) {
         storageManager.updateUser(userId: userID, userName: userName, isOnline: true, completion: nil)
+        self.updateCurrentConversation(userID, userName, true)
     }
     
    
     
     func didLostUser(userID: String) {
         storageManager.updateUser(userId: userID, userName: nil, isOnline: false, completion: nil)
+        self.updateCurrentConversation(userID, nil, false)
     }
     
     //error

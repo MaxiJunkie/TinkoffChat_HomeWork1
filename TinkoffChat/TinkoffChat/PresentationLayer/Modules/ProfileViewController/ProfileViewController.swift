@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class ProfileViewController: UIViewController , UIImagePickerControllerDelegate , UINavigationControllerDelegate, UITextFieldDelegate {
+class ProfileViewController: AnimationViewController , UIImagePickerControllerDelegate , UINavigationControllerDelegate, UITextFieldDelegate {
 
     var settingIsChange = false
     

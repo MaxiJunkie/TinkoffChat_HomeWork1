@@ -9,7 +9,7 @@
 import Foundation
 
 protocol IPeersService {
-    func loadNewPeers(completionHandler: @escaping ((_ data: [Conversations]) -> Void))
+    func loadNewPeers(completionHandler: @escaping ((_ userId: String, _ userName: String?,_ isOnline: Bool) -> Void))
 }
 
 class PeersService : IPeersService {
@@ -21,11 +21,12 @@ class PeersService : IPeersService {
         
     }
     
-    func loadNewPeers(completionHandler: @escaping (([Conversations]) -> Void)) {
+    func loadNewPeers(completionHandler: @escaping ((_ userId: String,_ userName: String?, _ isOnline: Bool) -> Void)) {
        
-        communicationManager.onDataUpdate = { (arrayOfPeers : [Conversations]) in
-       
-            completionHandler(arrayOfPeers)
+        communicationManager.updateCurrentConversation = { ( userId: String, userName: String?, isOnline: Bool) in
+           
+            completionHandler(userId, userName, isOnline)
+        
         }
     }
     
