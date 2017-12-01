@@ -12,9 +12,9 @@ struct RequestsFactory {
     
     struct PixabayImagesRequests {
         
-        static func imagesConfig() -> RequestConfig<ImagesModel> {
+        static func imagesConfig() -> RequestConfig<[ImagesModel]> {
         
-            return RequestConfig<ImagesModel>(request: PixabayImagesRequest(), parser: ImagesParser())
+            return RequestConfig<[ImagesModel]>(request: PixabayImagesRequest(), parser: ImagesParser())
         }
     
     }

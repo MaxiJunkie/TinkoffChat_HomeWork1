@@ -9,7 +9,7 @@
 import Foundation
 
 protocol IImagesService {
-    func loadNewImages(completionHandler: @escaping (ImagesModel?, String?) -> Void)
+    func loadNewImages(completionHandler: @escaping ([ImagesModel]?, String?) -> Void)
     func loadNewImage(with url: String, completionHandler: @escaping (ImageModel?, String?) -> Void)
 }
 
@@ -22,9 +22,9 @@ class ImagesService: IImagesService {
         self.requestSender = requestSender
     }
     
-    func loadNewImages(completionHandler: @escaping (ImagesModel?, String?) -> Void) {
+    func loadNewImages(completionHandler: @escaping ([ImagesModel]?, String?) -> Void) {
       
-        let requestConfig: RequestConfig<ImagesModel> = RequestsFactory.PixabayImagesRequests.imagesConfig()
+        let requestConfig: RequestConfig<[ImagesModel]> = RequestsFactory.PixabayImagesRequests.imagesConfig()
         
         loadImages(requestConfig: requestConfig, completionHandler: completionHandler)
     }
@@ -37,9 +37,9 @@ class ImagesService: IImagesService {
         
     }
 
-    private func loadImages(requestConfig: RequestConfig<ImagesModel>,
-                          completionHandler: @escaping (ImagesModel?, String?) -> Void) {
-        requestSender.send(config: requestConfig) { (result: Result<ImagesModel>) in
+    private func loadImages(requestConfig: RequestConfig<[ImagesModel]>,
+                          completionHandler: @escaping ([ImagesModel]?, String?) -> Void) {
+        requestSender.send(config: requestConfig) { (result: Result<[ImagesModel]>) in
             
             switch result {
             case .Success(let images):

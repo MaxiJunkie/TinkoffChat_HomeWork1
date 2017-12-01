@@ -24,6 +24,7 @@ class AnimationViewController: UIViewController {
         
     }
     
+    
     @objc private func circleAnimation() {
         
         let tinkoffImageView = UIImageView()

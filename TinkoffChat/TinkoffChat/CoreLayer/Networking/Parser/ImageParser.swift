@@ -9,9 +9,8 @@
 import Foundation
 import UIKit
 
-struct ImageModel: IModel  {
+struct ImageModel  {
     
-    typealias Model = ImageParser
     let image: UIImage
     
 }

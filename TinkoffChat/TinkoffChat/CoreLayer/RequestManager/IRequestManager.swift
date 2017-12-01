@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct RequestConfig<Model> where Model: IModel {
+struct RequestConfig<Model>  {
     let request: IRequest
     let parser: Parser<Model>
 }

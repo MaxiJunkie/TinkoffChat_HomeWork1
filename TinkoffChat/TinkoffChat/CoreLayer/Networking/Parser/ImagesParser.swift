@@ -8,17 +8,16 @@
 
 import Foundation
 
-struct ImagesModel: IModel  {
+struct ImagesModel  {
 
-    typealias Model = ImagesParser
-    let imagesWithUrl: [String]
+    let imageUrl: String
     
 }
 
 
-class ImagesParser: Parser<ImagesModel> {
+class ImagesParser: Parser<[ImagesModel]> {
     
-    override func parse(data: Data) -> ImagesModel? {
+    override func parse(data: Data) -> [ImagesModel]? {
        
         do {
             
@@ -29,19 +28,18 @@ class ImagesParser: Parser<ImagesModel> {
         
             guard let hits = json["hits"] as? [Any] else { return nil }
           
-            var images: [String] = []
+            var images: [ImagesModel] = []
             
             for object in hits {
                 if let dictionary = object as? [String:Any] {
                     if let webformatURL = dictionary["webformatURL"] as? String {
-                        images.append(webformatURL)
+                        let imageModel = ImagesModel.init(imageUrl: webformatURL)
+                        images.append(imageModel)
                     }
                 }
             }
-        
-            let imageModel = ImagesModel.init(imagesWithUrl: images)
-    
-            return imageModel
+   
+            return images
             
         } catch  {
             print("error trying to convert data to JSON")

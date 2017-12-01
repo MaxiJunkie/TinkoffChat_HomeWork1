@@ -17,7 +17,7 @@ protocol INetworkImagesModel: class {
 
 
 protocol INetworkImagesModelDelegate: class {
-    func setup(imagesUrl: [String])
+    func setup(imagesModel: [ImagesModel])
 }
 
 
@@ -36,8 +36,8 @@ class NetworkImagesModel: INetworkImagesModel {
         imagesService.loadNewImages { (imagesModel, error) in
             
             assert(error == nil, "Error of request")
-            if let model = imagesModel {
-                self.delegate?.setup(imagesUrl: model.imagesWithUrl)
+            if let images = imagesModel {
+                self.delegate?.setup(imagesModel: images )
             }
         }
     }
@@ -45,7 +45,6 @@ class NetworkImagesModel: INetworkImagesModel {
     func fetchImage(with url: String , completionHandler: @escaping (ImageModel?, String?) -> Void) {
         
         imagesService.loadNewImage(with: url) { (imageModel, error) in
-            assert(error == nil, "Error of request")
             if let model = imageModel {
                 completionHandler(model,nil)
             }

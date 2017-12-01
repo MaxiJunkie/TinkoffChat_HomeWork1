@@ -139,9 +139,12 @@ extension NetworkImagesViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension NetworkImagesViewController: INetworkImagesModelDelegate {
-    func setup(imagesUrl: [String]) {
-       
-        self.imagesUrl = imagesUrl
+    func setup(imagesModel: [ImagesModel]) {
+        
+        for image in imagesModel {
+            self.imagesUrl.append(image.imageUrl)
+        }
+   
         DispatchQueue.main.async { [weak self] in
             self?.activityIndicator.stopAnimating()
             self?.networkImagesCollectionView.reloadData()
